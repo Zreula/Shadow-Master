@@ -1,0 +1,91 @@
+{
+  "dungeonUpgrades": {
+    "2": { 
+      "cost": 800, 
+      "name": "Catacombes", 
+      "maxMonsters": 8, 
+      "newFeatures": ["Marché Noir"], 
+      "maxEnergy": 6 
+    },
+    "3": { 
+      "cost": 2000, 
+      "name": "Crypte Profonde", 
+      "maxMonsters": 12, 
+      "newFeatures": ["Laboratoire Alchimique"], 
+      "maxEnergy": 7 
+    },
+    "4": { 
+      "cost": 5000, 
+      "name": "Citadelle des Ombres", 
+      "maxMonsters": 16, 
+      "newFeatures": ["Arène de Combat"], 
+      "maxEnergy": 8 
+    },
+    "5": { 
+      "cost": 10000, 
+      "name": "Forteresse Maudite", 
+      "maxMonsters": 20, 
+      "newFeatures": ["Portail Démoniaque"], 
+      "maxEnergy": 10 
+    }
+  },
+  "randomEvents": [
+    {
+      "text": "Un voyageur perdu offre de l'or contre sa liberté...",
+      "choices": [
+        { "text": "Accepter l'or (+50 or)", "action": "addGold", "value": 50 },
+        { "text": "Le dévorer (+5 réputation)", "action": "addReputation", "value": 5 }
+      ]
+    },
+    {
+      "text": "Des aventuriers tentent d'infiltrer votre donjon !",
+      "choices": [
+        { "text": "Les combattre", "action": "defendDungeon" },
+        { "text": "Négocier", "action": "negotiateWithAdventurers" }
+      ]
+    },
+    {
+      "text": "Un démon propose un pacte mystérieux...",
+      "choices": [
+        { "text": "Accepter le pacte", "action": "demonPact" },
+        { "text": "Refuser prudemment", "action": "addJournalEntry", "value": "Vous refusez le pacte démoniaque." }
+      ]
+    }
+  ],
+  "discoveries": {
+    "ruins": [
+      { "text": "Vous découvrez un coffre rempli d'or ancien !", "gold": 50 },
+      { "text": "Des ossements d'anciens héros... leur terreur nourrit votre réputation.", "reputation": 5 },
+      { "text": "Une gemme maudite pulse d'énergie maléfique...", "gold": 80 },
+      { "text": "Vous ne trouvez que poussière et regrets...", "gold": 0 }
+    ],
+    "whispers": [
+      { "text": "Les murmures vous guident vers une cache secrète... +60 or !", "gold": 60 },
+      { "text": "Les esprits partagent leurs connaissances... +6 réputation !", "reputation": 6 },
+      { "text": "Les voix se taisent, vous laissant dans le silence..." }
+    ],
+    "depths": [
+      { "text": "Vous découvrez une veine d'or noir...", "gold": 100 },
+      { "text": "Des artefacts maudits augmentent votre influence...", "reputation": 10 },
+      { "text": "Les profondeurs restent silencieuses...", "gold": 0 }
+    ]
+  },
+  "meditations": [
+    "Vous méditez sur les mystères des ténèbres...",
+    "Les ombres vous murmurent des secrets anciens...",
+    "Votre connexion avec les forces obscures se renforce...",
+    "L'énergie maléfique coule en vous comme un fleuve noir..."
+  ],
+  "combatScenarios": [
+    "Vos monstres frappent dans l'ombre ! L'effet de surprise est total.",
+    "Le combat fait rage pendant des heures. Vos créatures montrent leur supériorité.",
+    "Les défenseurs tentent une résistance héroïque, mais vos légions sont implacables.",
+    "Une victoire écrasante ! L'ennemi fuit en abandonnant tout derrière lui.",
+    "Vos monstres sèment la terreur avec une efficacité terrifiante."
+  ],
+  "restEvents": [
+    { "text": "Vos monstres trouvent de l'or pendant votre sommeil...", "gold": 20 },
+    { "text": "Votre réputation grandit dans l'ombre...", "reputation": 3 },
+    { "text": "Une nuit paisible vous a restauré...", "gold": 0 }
+  ]
+}

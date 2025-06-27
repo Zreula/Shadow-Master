@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maître des Ombres - RPG Textuel</title>
+    <link rel="stylesheet" href="style.css?v=202512262100">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🌙 Maître des Ombres</h1>
+            <div class="version-info">Version Modulaire</div>
+        </header>
+
+        <main class="game-main">
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">💰 Or:</span>
+                    <span id="gold" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⭐ Réputation:</span>
+                    <span id="reputation" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">👹 Monstres:</span>
+                    <span id="monsterCount" class="stat-value">0</span>/<span id="maxMonsters" class="stat-value">5</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🏰 Donjon:</span>
+                    <span id="dungeonLevel" class="stat-value">1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⚡ Énergie:</span>
+                    <span id="energy" class="stat-value">5/5</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">📅 Jour:</span>
+                    <span id="day" class="stat-value">1</span>
+                </div>
+            </div>
+
+            <div class="game-content">
+                <div class="story-section">
+                    <div id="storyText" class="story-text">
+                        <h2>Chargement...</h2>
+                        <p>Initialisation du jeu en cours...</p>
+                    </div>
+                    <div id="choicesContainer" class="choices-container">
+                        <!-- Les choix apparaîtront ici -->
+                    </div>
+                </div>
+
+                <div class="side-panels">
+                    <div class="monsters-panel">
+                        <h3>👹 Légions</h3>
+                        <div id="monstersList" class="monsters-list">
+                            <p class="empty">Aucun monstre recruté</p>
+                        </div>
+                    </div>
+
+                    <div class="inventory-panel">
+                        <h3>🎒 Inventaire</h3>
+                        <div id="inventory" class="inventory">
+                            <p class="empty">Inventaire vide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="journal-section">
+                <h3>📖 Journal des Ombres</h3>
+                <div id="journal" class="journal">
+                    <p>Votre règne commence...</p>
+                </div>
+            </div>
+        </main>
+        <footer class="game-footer">
+            <div class="save-controls">
+                <button id="saveGame" class="save-btn">💾 Sauvegarder</button>
+                <button id="loadGame" class="save-btn">📁 Charger</button>
+                <button id="newGame" class="save-btn">🎮 Nouveau Jeu</button>
+                <button id="deleteGame" class="save-btn danger">🗑️ Supprimer</button>
+            </div>
+            <div class="game-info">
+                <p>Made by Zreula</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Chargement des modules JavaScript dans l'ordre -->
+    <script src="js/utils.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/actions.js"></script>
+    <script src="js/scenes.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

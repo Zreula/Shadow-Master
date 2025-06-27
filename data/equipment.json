@@ -1,0 +1,72 @@
+{
+  "sword": { 
+    "name": "Épée Rouillée", 
+    "emoji": "⚔️", 
+    "cost": 80, 
+    "stats": { "force": 2 }, 
+    "slot": "weapon" 
+  },
+  "darkSword": { 
+    "name": "Lame des Ombres", 
+    "emoji": "🗡️", 
+    "cost": 200, 
+    "stats": { "force": 4, "magie": 1 }, 
+    "slot": "weapon" 
+  },
+  "cursedBlade": { 
+    "name": "Lame Maudite", 
+    "emoji": "⚔️", 
+    "cost": 500, 
+    "stats": { "force": 6, "magie": 3 }, 
+    "slot": "weapon" 
+  },
+  "leather": { 
+    "name": "Armure de Cuir", 
+    "emoji": "🛡️", 
+    "cost": 60, 
+    "stats": { "defense": 2 }, 
+    "slot": "armor" 
+  },
+  "chainmail": { 
+    "name": "Cotte de Mailles", 
+    "emoji": "🛡️", 
+    "cost": 150, 
+    "stats": { "defense": 4 }, 
+    "slot": "armor" 
+  },
+  "darkPlate": { 
+    "name": "Armure des Ombres", 
+    "emoji": "🛡️", 
+    "cost": 400, 
+    "stats": { "defense": 6, "magie": 2 }, 
+    "slot": "armor" 
+  },
+  "boots": { 
+    "name": "Bottes de Cuir", 
+    "emoji": "👢", 
+    "cost": 40, 
+    "stats": { "vitesse": 2 }, 
+    "slot": "boots" 
+  },
+  "shadowBoots": { 
+    "name": "Bottes Fantômes", 
+    "emoji": "👢", 
+    "cost": 120, 
+    "stats": { "vitesse": 4, "magie": 1 }, 
+    "slot": "boots" 
+  },
+  "amulet": { 
+    "name": "Amulette Sombre", 
+    "emoji": "📿", 
+    "cost": 180, 
+    "stats": { "magie": 3, "defense": 1 }, 
+    "slot": "accessory" 
+  },
+  "cursedRing": { 
+    "name": "Anneau Maudit", 
+    "emoji": "💍", 
+    "cost": 250, 
+    "stats": { "magie": 4, "force": 2 }, 
+    "slot": "accessory" 
+  }
+}
