@@ -382,59 +382,59 @@ class Translation {
                 points: "points",
                 creatures: "creatures",
                 
-                // Événements aléatoires
-                travelerEvent: "Un voyageur perdu offre de l'or contre sa liberté...",
-                acceptGold: "Accepter l'or (+50 or)",
-                devour: "Le dévorer (+5 réputation)",
-                adventurersEvent: "Des aventuriers tentent d'infiltrer votre donjon !",
-                fight: "Les combattre",
-                negotiate: "Négocier",
-                demonEvent: "Un démon propose un pacte mystérieux...",
-                acceptPact: "Accepter le pacte",
+                // Random events
+                travelerEvent: "A lost traveler offers gold for his freedom...",
+                acceptGold: "Accept gold (+50 gold)",
+                devour: "Devour him (+5 reputation)",
+                adventurersEvent: "Adventurers try to infiltrate your dungeon!",
+                fight: "Fight them",
+                negotiate: "Negotiate",
+                demonEvent: "A demon offers a mysterious pact...",
+                acceptPact: "Accept the pact",
                 
-                // Noms de dongeons
-                catacombs: "Catacombes",
-                deepCrypt: "Crypte Profonde",
-                shadowCitadel: "Citadelle des Ombres",
-                cursedFortress: "Forteresse Maudite",
+                // Dungeon names
+                catacombs: "Catacombs",
+                deepCrypt: "Deep Crypt",
+                shadowCitadel: "Shadow Citadel",
+                cursedFortress: "Cursed Fortress",
                 
-                // Fonctionnalités
-                blackMarket: "Marché Noir",
-                alchemyLab: "Laboratoire Alchimique",
-                combatArena: "Arène de Combat",
-                demonPortal: "Portail Démoniaque",
+                // Features
+                blackMarket: "Black Market",
+                alchemyLab: "Alchemy Laboratory",
+                combatArena: "Combat Arena",
+                demonPortal: "Demon Portal",
                 
-                // Monstres
+                // Monsters
                 monsters: {
-                    goblin: { name: "Gobelin", description: "Petit mais vicieux, excellent éclaireur" },
-                    orc: { name: "Orc", description: "Guerrier brutal et résistant" },
-                    troll: { name: "Troll", description: "Colosse destructeur aux poings de pierre" },
-                    sorcier: { name: "Sorcier Noir", description: "Maître des arts obscurs et des malédictions" },
-                    vampire: { name: "Vampire", description: "Noble des ténèbres assoiffé de sang" },
-                    demon: { name: "Démon", description: "Créature des abysses aux pouvoirs terrifiants" }
+                    goblin: { name: "Goblin", description: "Small but vicious, excellent scout" },
+                    orc: { name: "Orc", description: "Brutal and resilient warrior" },
+                    troll: { name: "Troll", description: "Destructive colossus with stone fists" },
+                    sorcier: { name: "Dark Sorcerer", description: "Master of dark arts and curses" },
+                    vampire: { name: "Vampire", description: "Noble of darkness thirsting for blood" },
+                    demon: { name: "Demon", description: "Creature from the abyss with terrifying powers" }
                 },
                 
-                // Équipement
+                // Equipment
                 equipment: {
-                    sword: { name: "Épée Rouillée" },
-                    darkSword: { name: "Lame des Ombres" },
-                    cursedBlade: { name: "Lame Maudite" },
-                    shield: { name: "Bouclier de Fer" },
-                    darkShield: { name: "Bouclier des Ombres" },
-                    soulShield: { name: "Bouclier d'Âmes" },
-                    leather: { name: "Armure de Cuir" },
-                    chainmail: { name: "Cotte de Mailles" },
-                    plate: { name: "Armure de Plaques" },
-                    darkPlate: { name: "Armure des Ténèbres" },
-                    boots: { name: "Bottes de Marche" },
-                    shadowBoots: { name: "Bottes de l'Ombre" },
-                    windBoots: { name: "Bottes du Vent" },
-                    ring: { name: "Anneau de Force" },
-                    manaRing: { name: "Anneau de Mana" },
-                    cursedRing: { name: "Anneau Maudit" },
-                    pendant: { name: "Pendentif de Protection" },
-                    darkPendant: { name: "Pendentif des Ombres" },
-                    soulPendant: { name: "Pendentif d'Âme" }
+                    sword: { name: "Rusty Sword" },
+                    darkSword: { name: "Shadow Blade" },
+                    cursedBlade: { name: "Cursed Blade" },
+                    shield: { name: "Iron Shield" },
+                    darkShield: { name: "Shadow Shield" },
+                    soulShield: { name: "Soul Shield" },
+                    leather: { name: "Leather Armor" },
+                    chainmail: { name: "Chain Mail" },
+                    plate: { name: "Plate Armor" },
+                    darkPlate: { name: "Darkness Armor" },
+                    boots: { name: "Walking Boots" },
+                    shadowBoots: { name: "Shadow Boots" },
+                    windBoots: { name: "Wind Boots" },
+                    ring: { name: "Ring of Strength" },
+                    manaRing: { name: "Mana Ring" },
+                    cursedRing: { name: "Cursed Ring" },
+                    pendant: { name: "Pendant of Protection" },
+                    darkPendant: { name: "Shadow Pendant" },
+                    soulPendant: { name: "Soul Pendant" }
                 }
             }
         };

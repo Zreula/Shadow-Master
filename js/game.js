@@ -32,6 +32,26 @@ class Game {
         this.gameConfig = {};
         
         this.initialized = false;
+        
+        this.initLanguageListener();
+    }
+    
+    initLanguageListener() {
+        // Écouter les changements de langue
+        window.addEventListener('languageChanged', (event) => {
+            this.onLanguageChanged(event.detail.language);
+        });
+    }
+    
+    onLanguageChanged(language) {
+        // Mettre à jour toute l'interface après un changement de langue
+        if (this.initialized) {
+            this.updateUI();
+            // Forcer le rafraîchissement de la scène actuelle
+            if (this.currentScene) {
+                this.showScene(this.currentScene);
+            }
+        }
     }
     
     async init() {

@@ -20,6 +20,13 @@ class UI {
         if (window.game && window.game.stats) {
             this.updateStats(window.game.stats);
         }
+        
+        // Mettre à jour les listes de monstres et inventaire
+        if (window.game && window.game.player) {
+            this.updateMonstersList(window.game.player.monsters, window.game.equipment);
+            this.updateInventory(window.game.player.inventory, window.game.equipment);
+            this.updateJournal(window.game.journal);
+        }
     }
     
     updateEmptyMessages() {
@@ -82,12 +89,17 @@ class UI {
         
         container.innerHTML = monsters.map((monster, index) => {
             const totalStats = this.calculateMonsterStats(monster);
+            // Utiliser la traduction pour le nom du monstre si disponible
+            const monsterName = window.translation ? 
+                window.translation.getMonsterName(monster.id, monster.name) : 
+                monster.name;
+                
             return `
                 <div class="monster-card">
                     <div class="monster-header">
                         <div class="monster-emoji">${monster.emoji}</div>
                         <div class="monster-info">
-                            <div class="monster-name">${monster.name}</div>
+                            <div class="monster-name">${monsterName}</div>
                             <div class="monster-level">${window.translation ? window.translation.t('level') : 'Niveau'} ${monster.level}</div>
                         </div>
                     </div>
@@ -110,7 +122,12 @@ class UI {
                         </div>
                     </div>
                     ${monster.equipment ? `<div class="monster-equipment">
-                        ${Object.values(monster.equipment).filter(eq => eq).map(eq => `<span class="equipment-item">${eq.emoji} ${eq.name}</span>`).join('')}
+                        ${Object.values(monster.equipment).filter(eq => eq).map(eq => {
+                            const equipName = window.translation ? 
+                                window.translation.getEquipmentName(eq.id, eq.name) : 
+                                eq.name;
+                            return `<span class="equipment-item">${eq.emoji} ${equipName}</span>`;
+                        }).join('')}
                     </div>` : ''}
                     <div class="monster-actions">
                         <button class="choice-btn btn-small" onclick="game.actions.showMonsterDetails(${index})">
@@ -164,12 +181,17 @@ class UI {
             const item = equipment[itemKey];
             if (!item) return '';
             
+            // Utiliser la traduction pour le nom de l'équipement si disponible
+            const itemName = window.translation ? 
+                window.translation.getEquipmentName(itemKey, item.name) : 
+                item.name;
+            
             return `
                 <div class="inventory-item">
                     <div class="item-header">
                         <div class="item-emoji">${item.emoji}</div>
                         <div class="item-info">
-                            <div class="item-name">${item.name}</div>
+                            <div class="item-name">${itemName}</div>
                             ${count > 1 ? `<div class="item-count">x${count}</div>` : ''}
                         </div>
                     </div>
