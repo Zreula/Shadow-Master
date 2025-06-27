@@ -11,6 +11,12 @@
         <header class="game-header">
             <h1>🌙 Maître des Ombres</h1>
             <div class="version-info">Version Modulaire</div>
+            <div class="language-switcher">
+                <button id="langBtn" class="lang-btn" title="Changer la langue / Change language">
+                    <span class="flag">🇫🇷</span>
+                    <span class="lang-text">FR</span>
+                </button>
+            </div>
         </header>
 
         <main class="game-main">
@@ -89,6 +95,7 @@
         </footer>
     </div>
     <!-- Chargement des modules JavaScript dans l'ordre -->
+    <script src="js/translation.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/dataManager.js"></script>
     <script src="js/ui.js"></script>

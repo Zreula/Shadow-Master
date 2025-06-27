@@ -9,17 +9,20 @@ class Actions {
         const monster = this.game.monsterTypes[monsterKey];
         
         if (!monster) {
-            this.game.addToJournal('❌ Monstre introuvable !');
+            const message = window.translation ? `❌ ${window.translation.t('monsterNotFound')}` : '❌ Monstre introuvable !';
+            this.game.addToJournal(message);
             return;
         }
         
         if (this.game.player.gold < monster.cost) {
-            this.game.addToJournal('❌ Pas assez d\'or pour recruter cette créature !');
+            const message = window.translation ? `❌ ${window.translation.t('notEnoughGold')}` : '❌ Pas assez d\'or pour recruter cette créature !';
+            this.game.addToJournal(message);
             return;
         }
         
         if (this.game.player.monsters.length >= this.game.player.maxMonsters) {
-            this.game.addToJournal('❌ Vos casernes sont pleines !');
+            const message = window.translation ? `❌ ${window.translation.t('barracksFull')}` : '❌ Vos casernes sont pleines !';
+            this.game.addToJournal(message);
             return;
         }
         
@@ -186,7 +189,8 @@ class Actions {
         if (monster.experience >= expNeeded) {
             monster.level++;
             monster.experience = 0;
-            this.game.addToJournal(`⭐ ${monster.emoji} ${monster.name} monte au niveau ${monster.level} !`);
+            const message = window.translation ? `⭐ ${monster.emoji} ${monster.name} ${window.translation.t('levelUp')} ${monster.level} !` : `⭐ ${monster.emoji} ${monster.name} monte au niveau ${monster.level} !`;
+            this.game.addToJournal(message);
         }
     }
     
@@ -207,12 +211,12 @@ class Actions {
         if (discovery.reputation) this.game.player.reputation += discovery.reputation;
         
         this.game.ui.displayScene(`
-            <h2>🔍 Exploration des Ruines</h2>
-            <p>Vous fouillez minutieusement les décombres de civilisations oubliées...</p>
+            <h2>🔍 ${window.translation ? window.translation.t('ruinsExploration') : 'Exploration des Ruines'}</h2>
+            <p>${window.translation ? window.translation.t('ruinsDesc') : 'Vous fouillez minutieusement les décombres de civilisations oubliées...'}</p>
             <p class="success">${discovery.text}</p>
         `, [
-            { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-            { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') }
+            { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+            { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
         ]);
         
         this.game.addToJournal(`🔍 ${discovery.text}`);
@@ -238,12 +242,12 @@ class Actions {
             if (whisper.reputation) this.game.player.reputation += whisper.reputation;
             
             this.game.ui.displayScene(`
-                <h2>👻 Murmures Spectraux</h2>
-                <p>Vous suivez les voix venues d'outre-tombe à travers les couloirs hantés...</p>
+                <h2>👻 ${window.translation ? window.translation.t('spectralWhispers') : 'Murmures Spectraux'}</h2>
+                <p>${window.translation ? window.translation.t('spectralDesc') : 'Vous suivez les voix venues d\'outre-tombe à travers les couloirs hantés...'}</p>
                 <p class="warning">${whisper.text}</p>
             `, [
-                { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-                { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') }
+                { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+                { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
             ]);
             
             this.game.addToJournal(`👻 ${whisper.text}`);
@@ -271,12 +275,12 @@ class Actions {
             if (finding.reputation) this.game.player.reputation += finding.reputation;
             
             this.game.ui.displayScene(`
-                <h2>🕳️ Abysses Profonds</h2>
-                <p>Vous descendez dans les entrailles de la terre, là où la lumière n'a jamais brillé...</p>
+                <h2>🕳️ ${window.translation ? window.translation.t('deepAbyss') : 'Abysses Profonds'}</h2>
+                <p>${window.translation ? window.translation.t('abyssDesc') : 'Vous descendez dans les entrailles de la terre, là où la lumière n\'a jamais brillé...'}</p>
                 <p class="warning">${finding.text}</p>
             `, [
-                { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-                { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') }
+                { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+                { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
             ]);
             
             this.game.addToJournal(`🕳️ ${finding.text}`);
@@ -293,7 +297,7 @@ class Actions {
         if (this.game.player.monsters.length >= this.game.player.maxMonsters) {
             this.game.ui.displayScene(`
                 <h2>🐺 Rencontre Sauvage</h2>
-                <p>Vous tombez sur ${monster.emoji} ${monster.name} sauvage, mais vos casernes sont pleines !</p>
+                <p>${window.translation ? `${window.translation.t('youComeAcross')} ${monster.emoji} ${monster.name} ${window.translation.t('wild')}, ${window.translation.t('barracksFullWild')}` : `Vous tombez sur ${monster.emoji} ${monster.name} sauvage, mais vos casernes sont pleines !`}</p>
                 <p class="error">La créature s'enfuit dans les ténèbres...</p>
             `, [
                 { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore') },
@@ -316,7 +320,7 @@ class Actions {
         
         this.game.ui.displayScene(`
             <h2>🐺 Rencontre Sauvage</h2>
-            <p>Dans les profondeurs, vous tombez sur ${monster.emoji} ${monster.name} solitaire !</p>
+            <p>${window.translation ? `${window.translation.t('inTheDepths')} ${monster.emoji} ${monster.name} ${window.translation.t('solitary')} !` : `Dans les profondeurs, vous tombez sur ${monster.emoji} ${monster.name} solitaire !`}</p>
             <p class="success">La créature reconnaît votre autorité et rejoint vos rangs gratuitement !</p>
         `, [
             { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore') },
@@ -347,11 +351,11 @@ class Actions {
         const meditation = meditations[Math.floor(Math.random() * meditations.length)];
         
         this.game.ui.displayScene(`
-            <h2>🔮 Méditation des Ombres</h2>
+            <h2>🔮 ${window.translation ? window.translation.t('meditationTitle') : 'Méditation des Ombres'}</h2>
             <p>${meditation}</p>
-            <p class="success">Votre esprit s'aiguise. +${goldGained} or, +${repGained} réputation.</p>
+            <p class="success">${window.translation ? window.translation.t('spiritSharpens') : 'Votre esprit s\'aiguise.'} ${window.translation ? `+${goldGained} ${window.translation.t('gold')}, +${repGained} ${window.translation.t('reputation').replace(':', '')}.` : `+${goldGained} or, +${repGained} réputation.`}</p>
         `, [
-            { text: '🏰 Retourner au Hall Principal', action: () => this.game.showScene('hub') }
+            { text: `🏰 ${window.translation ? window.translation.t('returnToHall') : 'Retourner au Hall Principal'}`, action: () => this.game.showScene('hub') }
         ]);
         
         this.game.addToJournal(`🔮 Méditation accomplie : +${goldGained} or, +${repGained} réputation`);
@@ -390,7 +394,7 @@ class Actions {
         this.game.ui.displayScene(`
             <h2>👹 Gestion de ${monster.emoji} ${monster.name}</h2>
             <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <p><strong>Niveau :</strong> ${monster.level} (EXP: ${monster.experience}/${monster.level * 100})</p>
+                <p><strong>${window.translation ? window.translation.t('level') : 'Niveau'} :</strong> ${monster.level} (${window.translation ? window.translation.t('exp') : 'EXP'}: ${monster.experience}/${monster.level * 100})</p>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0;">
                     <div><strong>⚔️ Force:</strong> ${stats.force}</div>
                     <div><strong>🛡️ Défense:</strong> ${stats.defense}</div>

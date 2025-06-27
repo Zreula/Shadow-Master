@@ -57,7 +57,8 @@ class Game {
             this.loadGame();
             this.updateUI();
             this.showScene('start');
-            this.addToJournal('📖 Votre règne commence dans les ténèbres...');
+            const journalMessage = window.translation ? window.translation.t('reignBeginsDetailed') : 'Votre règne commence dans les ténèbres...';
+            this.addToJournal(`📖 ${journalMessage}`);
             this.startAutoSave();
             
             console.log('Jeu initialisé avec succès');
@@ -153,7 +154,8 @@ class Game {
         this.player.actionsToday++;
         
         if (this.player.energy === 0) {
-            this.addToJournal('⚡ Vous êtes épuisé ! Vous devez vous reposer.');
+            const exhaustedMessage = window.translation ? window.translation.t('exhausted') : 'Vous êtes épuisé ! Vous devez vous reposer.';
+            this.addToJournal(`⚡ ${exhaustedMessage}`);
         }
     }
     
@@ -172,15 +174,16 @@ class Game {
         }
         
         this.ui.displayScene(`
-            <h2>💤 Nouveau Jour</h2>
-            <p>Vous vous réveillez après un repos réparateur dans les ténèbres de votre donjon.</p>
-            <p class="success">🌅 Jour ${this.player.day} commence ! Votre énergie est restaurée (${this.player.maxEnergy}/${this.player.maxEnergy}).</p>
-            <p>Les ombres vous murmurent que de nouveaux défis vous attendent...</p>
+            <h2>💤 ${window.translation ? window.translation.t('newDay') : 'Nouveau Jour'}</h2>
+            <p>${window.translation ? window.translation.t('restfulWakeup') : 'Vous vous réveillez après un repos réparateur dans les ténèbres de votre donjon.'}</p>
+            <p class="success">🌅 ${window.translation ? window.translation.t('day') : 'Jour'} ${this.player.day} ${window.translation ? window.translation.t('dayBegins') : 'commence ! Votre énergie est restaurée'} (${this.player.maxEnergy}/${this.player.maxEnergy}).</p>
+            <p>${window.translation ? window.translation.t('shadowsWhisper') : 'Les ombres vous murmurent que de nouveaux défis vous attendent...'}</p>
         `, [
-            { text: '🏰 Commencer la journée', action: () => this.showScene('hub') }
+            { text: `🏰 ${window.translation ? window.translation.t('startDay') : 'Commencer la journée'}`, action: () => this.showScene('hub') }
         ]);
         
-        this.addToJournal(`🌅 Jour ${this.player.day} : Repos terminé, énergie restaurée !`);
+        const journalMessage = window.translation ? `🌅 ${window.translation.t('day')} ${this.player.day} : ${window.translation.t('restComplete')}` : `🌅 Jour ${this.player.day} : Repos terminé, énergie restaurée !`;
+        this.addToJournal(journalMessage);
         this.updateUI();
     }
     
@@ -215,12 +218,14 @@ class Game {
             localStorage.setItem('masterOfShadowsSave', JSON.stringify(saveData));
             
             if (!isAuto) {
-                this.addToJournal('💾 Partie sauvegardée !');
+                const saveMessage = window.translation ? window.translation.t('gameSaved') : 'Partie sauvegardée !';
+                this.addToJournal(`💾 ${saveMessage}`);
             }
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
             if (!isAuto) {
-                this.addToJournal('❌ Erreur lors de la sauvegarde !');
+                const errorMessage = window.translation ? window.translation.t('saveError') : 'Erreur lors de la sauvegarde !';
+                this.addToJournal(`❌ ${errorMessage}`);
             }
         }
     }
@@ -228,7 +233,8 @@ class Game {
     deleteSave() {
         try {
             localStorage.removeItem('masterOfShadowsSave');
-            this.addToJournal('🗑️ Sauvegarde supprimée !');
+            const deleteMessage = window.translation ? window.translation.t('saveDeleted') : 'Sauvegarde supprimée !';
+            this.addToJournal(`🗑️ ${deleteMessage}`);
             
             // Réinitialiser le jeu
             this.player = {
@@ -251,15 +257,18 @@ class Game {
             this.showScene('start');
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
-            this.addToJournal('❌ Erreur lors de la suppression !');
+            const errorMessage = window.translation ? window.translation.t('deleteError') : 'Erreur lors de la suppression !';
+            this.addToJournal(`❌ ${errorMessage}`);
         }
     }
     
     newGame() {
-        const confirmReset = confirm('Êtes-vous sûr de vouloir commencer un nouveau jeu ? Toute progression sera perdue !');
+        const confirmMessage = window.translation ? window.translation.t('confirmNewGameLong') : 'Êtes-vous sûr de vouloir commencer un nouveau jeu ? Toute progression sera perdue !';
+        const confirmReset = confirm(confirmMessage);
         if (confirmReset) {
             this.deleteSave();
-            this.addToJournal('🎮 Nouveau jeu commencé !');
+            const newGameMessage = window.translation ? window.translation.t('newGameStarted') : 'Nouveau jeu commencé !';
+            this.addToJournal(`🎮 ${newGameMessage}`);
         }
     }
     

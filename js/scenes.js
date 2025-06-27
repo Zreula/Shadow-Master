@@ -20,14 +20,14 @@ class Scenes {
     getStartScene() {
         return {
             text: `
-                <h2>🌙 L'Éveil des Ténèbres</h2>
-                <p>Les brumes matinales se dissipent, révélant votre nouveau domaine. Cette forteresse oubliée, nichée dans les montagnes maudites, sera le berceau de votre empire des ombres.</p>
-                <p>Les murs suintent d'une magie ancienne, et l'air vibre de promesses de pouvoir. Votre destin vous attend dans les profondeurs...</p>
-                <p class="warning">Votre première mission : établir votre domination sur ces terres abandonnées par les dieux.</p>
-                <p class="warning">Préparez-vous à plonger dans l'inconnu...</p>
+                <h2>🌙 ${window.translation ? window.translation.t('darknessAwakening') : 'L\'Éveil des Ténèbres'}</h2>
+                <p>${window.translation ? window.translation.t('startSceneIntro') : 'Les brumes matinales se dissipent, révélant votre nouveau domaine. Cette forteresse oubliée, nichée dans les montagnes maudites, sera le berceau de votre empire des ombres.'}</p>
+                <p>${window.translation ? window.translation.t('startSceneDescription') : 'Les murs suintent d\'une magie ancienne, et l\'air vibre de promesses de pouvoir. Votre destin vous attend dans les profondeurs...'}</p>
+                <p class="warning">${window.translation ? window.translation.t('firstMission') : 'Votre première mission : établir votre domination sur ces terres abandonnées par les dieux.'}</p>
+                <p class="warning">${window.translation ? window.translation.t('prepareForUnknown') : 'Préparez-vous à plonger dans l\'inconnu...'}</p>
             `,
             choices: [
-                { text: '🏰 Entrer dans le donjon', action: () => this.game.showScene('hub') }
+                { text: `🏰 ${window.translation ? window.translation.t('enterDungeon') : 'Entrer dans le donjon'}`, action: () => this.game.showScene('hub') }
             ]
         };
     }
@@ -35,28 +35,30 @@ class Scenes {
     getHubScene() {
         const upgradeAvailable = this.game.actions.canUpgradeDungeon();
         const newFeaturesText = this.game.player.dungeonLevel > 1 ? 
-            `<p class="success">✨ Nouvelles fonctionnalités débloquées grâce à votre donjon niveau ${this.game.player.dungeonLevel} !</p>` : '';
+            `<p class="success">✨ ${window.translation ? window.translation.t('newFeaturesUnlocked') : 'Nouvelles fonctionnalités débloquées grâce à votre donjon niveau'} ${this.game.player.dungeonLevel} !</p>` : '';
         
-        const timeOfDay = this.game.player.energy > 0 ? '🌙 Nuit' : '🌅 Aube (Repos nécessaire)';
+        const timeOfDay = this.game.player.energy > 0 ? 
+            (window.translation ? `🌙 ${window.translation.t('timeOfDay').night}` : '🌙 Nuit') : 
+            (window.translation ? `🌅 ${window.translation.t('timeOfDay').morning} (${window.translation.t('restNeeded')})` : '🌅 Aube (Repos nécessaire)');
         const energyColor = this.game.player.energy <= 1 ? '#e74c3c' : (this.game.player.energy <= 2 ? '#f39c12' : '#27ae60');
         
         return {
             text: `
-                <h2>🏰 Hall des Ombres Éternelles</h2>
-                <p>Vous dominez votre domaine depuis votre trône d'obsidienne. Les torches noires projettent des ombres dansantes sur les murs gravés de runes anciennes.</p>
+                <h2>🏰 ${window.translation ? window.translation.t('hallTitle') : 'Hall des Ombres Éternelles'}</h2>
+                <p>${window.translation ? window.translation.t('hallDesc') : 'Vous dominez votre domaine depuis votre trône d\'obsidienne. Les torches noires projettent des ombres dansantes sur les murs gravés de runes anciennes.'}</p>
                 ${newFeaturesText}
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>💰 Trésor :</strong> ${this.game.player.gold} pièces d'or
+                        <strong>💰 ${window.translation ? window.translation.t('treasure') : 'Trésor :'}</strong> ${this.game.player.gold} ${window.translation ? window.translation.t('goldPieces') : 'pièces d\'or'}
                     </div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>⭐ Terreur :</strong> ${this.game.player.reputation} points
+                        <strong>⭐ ${window.translation ? window.translation.t('terror') : 'Terreur :'}</strong> ${this.game.player.reputation} ${window.translation ? window.translation.t('points') : 'points'}
                     </div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>👹 Légions :</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} créatures
+                        <strong>👹 ${window.translation ? window.translation.t('legions') : 'Légions :'}</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} ${window.translation ? window.translation.t('creatures') : 'créatures'}
                     </div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>🏰 Forteresse :</strong> Niveau ${this.game.player.dungeonLevel}
+                        <strong>🏰 ${window.translation ? window.translation.t('fortress') : 'Forteresse :'}</strong> ${window.translation ? window.translation.t('level') : 'Niveau'} ${this.game.player.dungeonLevel}
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
@@ -64,19 +66,19 @@ class Scenes {
                         <strong style="color: ${energyColor};">⚡ Énergie :</strong> <span style="color: ${energyColor};">${this.game.player.energy}/${this.game.player.maxEnergy}</span>
                     </div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>📅 Jour ${this.game.player.day}</strong> - ${timeOfDay}
+                        <strong>📅 ${window.translation ? window.translation.t('day') : 'Jour'} ${this.game.player.day}</strong> - ${timeOfDay}
                     </div>
                 </div>
-                ${this.game.player.energy === 0 ? '<p class="warning">⚠️ Vous êtes épuisé ! Vous devez vous reposer pour passer au jour suivant.</p>' : ''}
+                ${this.game.player.energy === 0 ? `<p class="warning">⚠️ ${window.translation ? window.translation.t('tired') : 'Vous êtes épuisé ! Vous devez vous reposer pour passer au jour suivant.'}</p>` : ''}
             `,
             choices: [
-                { text: '👹 Casernes (Recruter des monstres)', action: () => this.game.showScene('recruit'), disabled: this.game.player.energy === 0 },
-                { text: '⚔️ Table de Guerre (Missions)', action: () => this.game.showScene('missions'), disabled: this.game.player.energy === 0 },
-                { text: '🏪 Marché Noir (Équipements)', action: () => this.game.showScene('market'), disabled: this.game.player.dungeonLevel < 2 || this.game.player.energy === 0 },
-                { text: '🔨 Améliorer le Donjon', action: () => this.game.showScene('upgrade'), disabled: !upgradeAvailable || this.game.player.energy === 0 },
-                { text: '🌙 Explorer les Ténèbres', action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-                { text: '🔮 Méditer dans les Ombres', action: () => this.game.actions.meditate(), disabled: this.game.player.energy === 0 },
-                { text: '💤 Se reposer (Passer au jour suivant)', action: () => this.game.rest(), disabled: this.game.player.energy > 0 }
+                { text: `👹 ${window.translation ? window.translation.t('barracks') : 'Casernes (Recruter des monstres)'}`, action: () => this.game.showScene('recruit'), disabled: this.game.player.energy === 0 },
+                { text: `⚔️ ${window.translation ? window.translation.t('warTable') : 'Table de Guerre (Missions)'}`, action: () => this.game.showScene('missions'), disabled: this.game.player.energy === 0 },
+                { text: `🏪 ${window.translation ? window.translation.t('blackMarketMenu') : 'Marché Noir (Équipements)'}`, action: () => this.game.showScene('market'), disabled: this.game.player.dungeonLevel < 2 || this.game.player.energy === 0 },
+                { text: `🔨 ${window.translation ? window.translation.t('upgradeDungeon') : 'Améliorer le Donjon'}`, action: () => this.game.showScene('upgrade'), disabled: !upgradeAvailable || this.game.player.energy === 0 },
+                { text: `🌙 ${window.translation ? window.translation.t('exploreDarkness') : 'Explorer les Ténèbres'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+                { text: `🔮 ${window.translation ? window.translation.t('meditate') : 'Méditer dans les Ombres'}`, action: () => this.game.actions.meditate(), disabled: this.game.player.energy === 0 },
+                { text: `💤 ${window.translation ? window.translation.t('rest') : 'Se reposer (Passer au jour suivant)'}`, action: () => this.game.rest(), disabled: this.game.player.energy > 0 }
             ]
         };
     }
@@ -111,7 +113,7 @@ class Scenes {
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: bold; color: #f1c40f;">💰 ${monster.cost} or</span>
-                        ${available ? `<button class="choice-btn" onclick="game.actions.recruitMonster('${key}')" style="padding: 6px 12px; font-size: 0.9em;">Recruter</button>` : '<span style="color: #e74c3c; font-size: 0.9em;">Indisponible</span>'}
+                        ${available ? `<button class="choice-btn" onclick="game.actions.recruitMonster('${key}')" style="padding: 6px 12px; font-size: 0.9em;">${window.translation ? window.translation.t('recruit') : 'Recruter'}</button>` : `<span style="color: #e74c3c; font-size: 0.9em;">${window.translation ? window.translation.t('unavailable') : 'Indisponible'}</span>`}
                     </div>
                 </div>
             `;
@@ -121,11 +123,11 @@ class Scenes {
         
         return {
             text: `
-                <h2>👹 Casernes des Légions Infernales</h2>
-                <p>Les échos de rugissements et de grognements résonnent dans ces halls sombres. Ici, vous pouvez recruter des créatures des ténèbres pour servir vos ambitions maléfiques.</p>
+                <h2>👹 ${window.translation ? window.translation.t('barracksTitle') : 'Casernes des Légions Infernales'}</h2>
+                <p>${window.translation ? window.translation.t('barracksDesc') : 'Les échos de rugissements et de grognements résonnent dans ces halls sombres. Ici, vous pouvez recruter des créatures des ténèbres pour servir vos ambitions maléfiques.'}</p>
                 <div style="background: rgba(139,69,19,0.2); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                    <p><strong>💰 Or disponible :</strong> ${this.game.player.gold}</p>
-                    <p><strong>🏠 Casernes :</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} places occupées</p>
+                    <p><strong>💰 ${window.translation ? window.translation.t('goldAvailable') : 'Or disponible'} :</strong> ${this.game.player.gold}</p>
+                    <p><strong>🏠 ${window.translation ? window.translation.t('barracksOccupied') : 'Casernes :'}</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} ${window.translation ? window.translation.t('placesOccupied') : 'places occupées'}</p>
                 </div>
                 ${monsterOptions}
             `,
@@ -324,20 +326,20 @@ class Scenes {
     getExploreScene() {
         return {
             text: `
-                <h2>🌙 Exploration des Ténèbres</h2>
-                <p>Votre donjon recèle encore de nombreux mystères. Des couloirs oubliés, des chambres secrètes et des passages interdits attendent votre exploration.</p>
-                <p>Chaque expédition dans les profondeurs peut révéler des trésors, des connaissances anciennes, ou des rencontres inattendues...</p>
+                <h2>🌙 ${window.translation ? window.translation.t('explorationTitle') : 'Exploration des Ténèbres'}</h2>
+                <p>${window.translation ? window.translation.t('explorationDesc') : 'Votre donjon recèle encore de nombreux mystères. Des couloirs oubliés, des chambres secrètes et des passages interdits attendent votre exploration.'}</p>
+                <p>${window.translation ? window.translation.t('explorationSubDesc') : 'Chaque expédition dans les profondeurs peut révéler des trésors, des connaissances anciennes, ou des rencontres inattendues...'}</p>
                 
                 <div style="background: rgba(25,25,112,0.2); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                    <p><strong>⚡ Énergie disponible :</strong> ${this.game.player.energy}/${this.game.player.maxEnergy}</p>
-                    <p><strong>🗺️ Points d'exploration :</strong> ${this.game.player.explorationPoints}</p>
+                    <p><strong>⚡ ${window.translation ? window.translation.t('energyAvailable') : 'Énergie disponible :'}</strong> ${this.game.player.energy}/${this.game.player.maxEnergy}</p>
+                    <p><strong>🗺️ ${window.translation ? window.translation.t('explorationPoints') : 'Points d\'exploration :'}</strong> ${this.game.player.explorationPoints}</p>
                 </div>
             `,
             choices: [
-                { text: '🔍 Fouiller les ruines anciennes', action: () => this.game.actions.exploreRuins(), disabled: this.game.player.energy === 0 },
-                { text: '👻 Suivre les murmures spectraux', action: () => this.game.actions.followWhispers(), disabled: this.game.player.energy === 0 },
-                { text: '🕳️ Descendre plus profondément', action: () => this.game.actions.exploreDeeper(), disabled: this.game.player.energy === 0 },
-                { text: '🏰 Retourner au Hall Principal', action: () => this.game.showScene('hub') }
+                { text: `🔍 ${window.translation ? window.translation.t('searchRuins') : 'Fouiller les ruines anciennes'}`, action: () => this.game.actions.exploreRuins(), disabled: this.game.player.energy === 0 },
+                { text: `👻 ${window.translation ? window.translation.t('followWhispers') : 'Suivre les murmures spectraux'}`, action: () => this.game.actions.followWhispers(), disabled: this.game.player.energy === 0 },
+                { text: `🕳️ ${window.translation ? window.translation.t('descendDeeper') : 'Descendre plus profondément'}`, action: () => this.game.actions.exploreDeeper(), disabled: this.game.player.energy === 0 },
+                { text: `🏰 ${window.translation ? window.translation.t('returnToHall') : 'Retourner au Hall Principal'}`, action: () => this.game.showScene('hub') }
             ]
         };
     }

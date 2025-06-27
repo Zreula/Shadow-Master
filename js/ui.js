@@ -2,6 +2,38 @@
 class UI {
     constructor() {
         this.initialized = false;
+        this.initLanguageListener();
+    }
+    
+    initLanguageListener() {
+        // Écouter les changements de langue
+        window.addEventListener('languageChanged', (event) => {
+            this.onLanguageChanged(event.detail.language);
+        });
+    }
+    
+    onLanguageChanged(language) {
+        // Mettre à jour les messages vides en fonction de la langue
+        this.updateEmptyMessages();
+        
+        // Si on a des stats, les mettre à jour pour les labels
+        if (window.game && window.game.stats) {
+            this.updateStats(window.game.stats);
+        }
+    }
+    
+    updateEmptyMessages() {
+        if (!window.translation) return;
+        
+        const monstersEmpty = document.querySelector('.monsters-list .empty');
+        if (monstersEmpty) {
+            monstersEmpty.textContent = window.translation.t('noMonsters');
+        }
+        
+        const inventoryEmpty = document.querySelector('.inventory .empty');
+        if (inventoryEmpty) {
+            inventoryEmpty.textContent = window.translation.t('emptyInventory');
+        }
     }
     
     showLoading() {
@@ -43,7 +75,8 @@ class UI {
         if (!container) return;
         
         if (monsters.length === 0) {
-            container.innerHTML = '<p class="empty">Aucun monstre recruté</p>';
+            const emptyMessage = window.translation ? window.translation.t('noMonsters') : 'Aucun monstre recruté';
+            container.innerHTML = `<p class="empty">${emptyMessage}</p>`;
             return;
         }
         
@@ -55,7 +88,7 @@ class UI {
                         <div class="monster-emoji">${monster.emoji}</div>
                         <div class="monster-info">
                             <div class="monster-name">${monster.name}</div>
-                            <div class="monster-level">Niveau ${monster.level}</div>
+                            <div class="monster-level">${window.translation ? window.translation.t('level') : 'Niveau'} ${monster.level}</div>
                         </div>
                     </div>
                     <div class="monster-stats">
@@ -81,7 +114,7 @@ class UI {
                     </div>` : ''}
                     <div class="monster-actions">
                         <button class="choice-btn btn-small" onclick="game.actions.showMonsterDetails(${index})">
-                            Gérer
+                            ${window.translation ? window.translation.t('manage') : 'Gérer'}
                         </button>
                     </div>
                 </div>
@@ -117,7 +150,8 @@ class UI {
         if (!container) return;
         
         if (inventory.length === 0) {
-            container.innerHTML = '<p class="empty">Inventaire vide</p>';
+            const emptyMessage = window.translation ? window.translation.t('emptyInventory') : 'Inventaire vide';
+            container.innerHTML = `<p class="empty">${emptyMessage}</p>`;
             return;
         }
         

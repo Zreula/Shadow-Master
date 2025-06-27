@@ -43,14 +43,43 @@ class DataManager {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        return this.monsters || {};
+        const monsters = this.monsters || {};
+        
+        // Appliquer les traductions si nécessaire
+        if (window.translation && window.translation.getCurrentLanguage() !== 'fr') {
+            const translatedMonsters = {};
+            Object.entries(monsters).forEach(([key, monster]) => {
+                translatedMonsters[key] = {
+                    ...monster,
+                    name: window.translation.getMonsterName(key, monster.name),
+                    description: window.translation.getMonsterDescription(key, monster.description)
+                };
+            });
+            return translatedMonsters;
+        }
+        
+        return monsters;
     }
     
     async getEquipment() {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        return this.equipment || {};
+        const equipment = this.equipment || {};
+        
+        // Appliquer les traductions si nécessaire
+        if (window.translation && window.translation.getCurrentLanguage() !== 'fr') {
+            const translatedEquipment = {};
+            Object.entries(equipment).forEach(([key, item]) => {
+                translatedEquipment[key] = {
+                    ...item,
+                    name: window.translation.getEquipmentName(key, item.name)
+                };
+            });
+            return translatedEquipment;
+        }
+        
+        return equipment;
     }
     
     async getMissions() {
@@ -64,16 +93,19 @@ class DataManager {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        return this.gameConfig || {};
+        const config = this.gameConfig || {};
+        return window.translation ? window.translation.getGameData('gameConfig', config) : config;
     }
     
     // Méthodes utilitaires pour accéder aux données spécifiques
     getDungeonUpgrades() {
-        return this.gameConfig?.dungeonUpgrades || {};
+        const data = this.gameConfig?.dungeonUpgrades || {};
+        return window.translation ? window.translation.getGameData('dungeonUpgrades', data) : data;
     }
     
     getRandomEvents() {
-        return this.gameConfig?.randomEvents || [];
+        const data = this.gameConfig?.randomEvents || [];
+        return window.translation ? window.translation.getGameData('randomEvents', data) : data;
     }
     
     getDiscoveries(type) {
