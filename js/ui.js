@@ -86,47 +86,22 @@ class UI {
         }
         
         container.innerHTML = monsters.map((monster, index) => {
-            const totalStats = this.calculateMonsterStats(monster);
-            
             return `
-                <div class="monster-card">
-                    <div class="monster-header">
-                        <div class="monster-emoji">${monster.emoji}</div>
-                        <div class="monster-info">
+                <div class="monster-item">
+                    <div class="monster-display">
+                        <div class="monster-info-compact">
+                            <div class="monster-emoji">${monster.emoji}</div>
                             <div class="monster-name">${monster.name}</div>
-                            <div class="monster-level">Level ${monster.level}</div>
+                            <div class="monster-level">Lv${monster.level}</div>
                         </div>
-                    </div>
-                    <div class="monster-stats">
-                        <div class="stat-group">
-                            <span class="stat-label">⚔️</span>
-                            <span class="stat-value">${totalStats.strength}</span>
+                        <div class="monster-actions">
+                            <button class="btn-small" onclick="game.actions.showMonsterDetails(${index})">
+                                Manage
+                            </button>
+                            <button class="btn-small btn-danger" onclick="game.actions.dismissMonster(${index})">
+                                Dismiss
+                            </button>
                         </div>
-                        <div class="stat-group">
-                            <span class="stat-label">🛡️</span>
-                            <span class="stat-value">${totalStats.defense}</span>
-                        </div>
-                        <div class="stat-group">
-                            <span class="stat-label">⚡</span>
-                            <span class="stat-value">${totalStats.speed}</span>
-                        </div>
-                        <div class="stat-group">
-                            <span class="stat-label">🔮</span>
-                            <span class="stat-value">${totalStats.magic}</span>
-                        </div>
-                    </div>
-                    ${monster.equipment ? `<div class="monster-equipment">
-                        ${Object.values(monster.equipment).filter(eq => eq).map(eq => {
-                            return `<span class="equipment-item">${eq.emoji} ${eq.name}</span>`;
-                        }).join('')}
-                    </div>` : ''}
-                    <div class="monster-actions">
-                        <button class="choice-btn btn-small" onclick="game.actions.showMonsterDetails(${index})">
-                            Manage
-                        </button>
-                        <button class="choice-btn btn-small btn-danger" onclick="game.actions.dismissMonster(${index})" style="margin-left: 5px;">
-                            Dismiss
-                        </button>
                     </div>
                 </div>
             `;

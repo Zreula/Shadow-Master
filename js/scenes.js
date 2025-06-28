@@ -81,28 +81,6 @@ class Scenes {
                 <p>You dominate your domain from your obsidian throne. Black torches cast dancing shadows on the walls engraved with ancient runes.</p>
                 ${newFeaturesText}
                 ${tutorialText}
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>💰 Treasure:</strong> ${this.game.player.gold} golds.
-                    </div>
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>⭐ Reputation:</strong> ${this.game.player.reputation} points.
-                    </div>
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>👹 Legions:</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} creatures.
-                    </div>
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>🏰 Fortress:</strong> Level ${this.game.player.dungeonLevel}.
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong style="color: ${energyColor};">⚡ Energy:</strong> <span style="color: ${energyColor};">${this.game.player.energy}/${this.game.player.maxEnergy}.</span>
-                    </div>
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px;">
-                        <strong>📅 Day ${this.game.player.day}</strong> - ${timeOfDay}.
-                    </div>
-                </div>
                 ${this.game.player.energy === 0 ? `<p class="warning">⚠️ You are exhausted! You must rest to go to the next day.</p>` : ''}
             `,
             choices: [
@@ -118,7 +96,7 @@ class Scenes {
     }
     
     getRecruitScene() {
-        let monsterOptions = '<div style="display: grid; gap: 15px;">';
+        let monsterOptions = '<div class="recruit-monsters-list">';
         
         Object.entries(this.game.monsterTypes).forEach(([key, monster]) => {
             const canAfford = this.game.player.gold >= monster.cost;
@@ -134,31 +112,23 @@ class Scenes {
             
             let unavailableReason = '';
             if (!canAfford && !hasSpace) {
-                unavailableReason = 'Not enough gold & barracks full';
+                unavailableReason = 'No gold & full';
             } else if (!canAfford) {
-                unavailableReason = `Need ${monster.cost - this.game.player.gold} more gold`;
+                unavailableReason = `Need ${monster.cost - this.game.player.gold} gold`;
             } else if (!hasSpace) {
-                unavailableReason = 'Barracks full - upgrade dungeon';
+                unavailableReason = 'Barracks full';
             }
             
             monsterOptions += `
-                <div class="monster-item" style="opacity: ${available ? '1' : '0.5'}; border-left: 4px solid ${rarityColor[monster.rarity]}; display: flex; flex-direction: column; align-items: stretch;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="flex: 1;">${monster.emoji} ${monster.name}</strong>
-                        <span style="color: ${rarityColor[monster.rarity]}; font-size: 0.8em; font-weight: bold; flex-shrink: 0;">${monster.rarity.toUpperCase()}</span>
+                <div class="recruit-monster-item" style="opacity: ${available ? '1' : '0.5'}; border-left: 3px solid ${rarityColor[monster.rarity]};">
+                    <div class="recruit-monster-info">
+                        <div class="recruit-monster-emoji">${monster.emoji}</div>
+                        <div class="recruit-monster-name">${monster.name}</div>
+                        <div class="recruit-monster-rarity" style="color: ${rarityColor[monster.rarity]};">${monster.rarity}</div>
+                        <div class="recruit-monster-cost">�${monster.cost}</div>
                     </div>
-                    <p style="font-style: italic; margin-bottom: 8px; color: #aaa; line-height: 1.3;">${monster.description}</p>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; font-size: 0.9em;">
-                        <span style="text-align: center;">⚔️ ${monster.baseStats.strength}</span>
-                        <span style="text-align: center;">🛡️ ${monster.baseStats.defense}</span>
-                        <span style="text-align: center;">⚡ ${monster.baseStats.speed}</span>
-                        <span style="text-align: center;">🔮 ${monster.baseStats.magic}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                        <span style="font-weight: bold; color: #f1c40f; flex-shrink: 0;">💰 ${monster.cost} gold</span>
-                        <div style="flex-shrink: 0; margin-left: 10px;">
-                            ${available ? `<button class="choice-btn" onclick="game.actions.recruitMonster('${key}')" style="padding: 6px 12px; font-size: 0.9em; white-space: nowrap;">Recruit</button>` : `<span style="color: #e74c3c; font-size: 0.8em; text-align: right; display: block;">${unavailableReason}</span>`}
-                        </div>
+                    <div class="recruit-monster-actions">
+                        ${available ? `<button class="recruit-btn" onclick="game.actions.recruitMonster('${key}')">Recruit</button>` : `<div class="recruit-unavailable">${unavailableReason}</div>`}
                     </div>
                 </div>
             `;
@@ -169,25 +139,9 @@ class Scenes {
         return {
             text: `
                 <h2>👹 Infernal Legions Barracks</h2>
-                <p>Echoes of roars and growls resonate in these dark halls. Here, you can recruit creatures of darkness to serve your evil ambitions.</p>
+                <p>Here, you can recruit creatures of darkness to serve your evil ambitions.</p>
                 
-                <div class="tutorial-info" style="background: rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #3498db;">
-                    <h4>🎓 How Monster Recruitment Works:</h4>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li><strong>Gold Cost:</strong> Each monster requires gold to recruit</li>
-                        <li><strong>Barracks Limit:</strong> You can only have ${this.game.player.maxMonsters} monsters at a time</li>
-                        <li><strong>Monster Stats:</strong> Higher rarity = stronger base stats</li>
-                        <li><strong>Level Growth:</strong> Monsters gain experience and level up through missions</li>
-                        <li><strong>Equipment:</strong> Give your monsters weapons and armor to boost their power</li>
-                    </ul>
-                    <p><strong>💡 Tip:</strong> Upgrade your dungeon to increase barracks capacity!</p>
-                </div>
-                
-                <div style="background: rgba(139,69,19,0.2); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                    <p><strong>💰 Available Gold:</strong> ${this.game.player.gold}</p>
-                    <p><strong>🏠 Barracks:</strong> ${this.game.player.monsters.length}/${this.game.player.maxMonsters} places occupied</p>
-                    ${this.game.player.monsters.length >= this.game.player.maxMonsters ? '<p class="warning">⚠️ Barracks are full! Upgrade your dungeon or dismiss a monster to recruit new ones.</p>' : ''}
-                </div>
+                ${this.game.player.monsters.length >= this.game.player.maxMonsters ? '<p class="warning">⚠️ Barracks are full! Upgrade your dungeon or dismiss a monster to recruit new ones.</p>' : ''}
                 ${monsterOptions}
             `,
             choices: [
@@ -199,16 +153,51 @@ class Scenes {
     getMissionsScene() {
         const totalPower = this.game.calculateTotalPower();
         let missionOptions = '<div class="missions-list">';
-        let hiddenMissionsCount = 0;
+        
+        // Analyser les missions pour déterminer ce qui bloque le joueur
+        let nextMissionPowerNeeded = null;
+        let nextMissionName = null;
+        let nextLevelRequired = null;
+        let nextLevelMissionName = null;
+        let hasAvailableMissions = false;
         
         Object.entries(this.game.missions).forEach(([key, mission]) => {
             const canAttempt = totalPower >= mission.requiredPower && 
                               this.game.player.dungeonLevel >= mission.unlockLevel && 
                               this.game.player.energy >= mission.energyCost;
             
-            // Compter les missions cachées
+            // Si la mission n'est pas accessible à cause de la puissance seulement (mais niveau OK)
+            if (!canAttempt && 
+                totalPower < mission.requiredPower && 
+                this.game.player.dungeonLevel >= mission.unlockLevel) {
+                
+                const powerNeeded = mission.requiredPower - totalPower;
+                
+                // Si c'est la première mission trouvée ou si elle nécessite moins de puissance
+                if (nextMissionPowerNeeded === null || powerNeeded < nextMissionPowerNeeded) {
+                    nextMissionPowerNeeded = powerNeeded;
+                    nextMissionName = mission.name;
+                }
+            }
+            
+            // Si la mission n'est pas accessible à cause du niveau de donjon
+            if (!canAttempt && 
+                this.game.player.dungeonLevel < mission.unlockLevel) {
+                
+                // Trouver la mission du niveau suivant le plus proche
+                if (nextLevelRequired === null || mission.unlockLevel < nextLevelRequired) {
+                    nextLevelRequired = mission.unlockLevel;
+                    nextLevelMissionName = mission.name;
+                }
+            }
+            
+            // Compter les missions accessibles
+            if (canAttempt) {
+                hasAvailableMissions = true;
+            }
+            
+            // Afficher seulement les missions accessibles
             if (!canAttempt) {
-                hiddenMissionsCount++;
                 return;
             }
             
@@ -280,20 +269,7 @@ class Scenes {
                     <p><strong>💡 Tip:</strong> Recruit more monsters and equip them to increase your total power!</p>
                 </div>
                 
-                <div class="army-status">
-                    <div class="status-item">
-                        <span class="status-icon">💪</span>
-                        <span class="status-label">Total Power:</span>
-                        <span class="status-value">${totalPower}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-icon">⚡</span>
-                        <span class="status-label">Available Energy:</span>
-                        <span class="status-value">${this.game.player.energy}/${this.game.player.maxEnergy}</span>
-                    </div>
-                </div>
-                
-                ${hiddenMissionsCount > 0 ? `<p class="info" style="background: rgba(255, 193, 7, 0.2); padding: 10px; border-radius: 6px; margin: 10px 0;">📋 ${hiddenMissionsCount} more mission(s) available when you meet the requirements.</p>` : ''}
+                ${this.generateMissionStatusMessage(hasAvailableMissions, nextMissionPowerNeeded, nextMissionName, totalPower, nextLevelRequired, nextLevelMissionName)}
                 
                 ${missionOptions}
             `,
@@ -328,23 +304,25 @@ class Scenes {
             };
         }
         
-        let equipmentOptions = '<div style="display: grid; gap: 12px;">';
+        let equipmentOptions = '<div class="market-equipment-list">';
         
         Object.entries(this.game.equipment).forEach(([key, item]) => {
             const canAfford = this.game.player.gold >= item.cost;
             
+            // Créer un string compact des stats
+            const statsString = Object.entries(item.stats).map(([stat, value]) => `${stat}:+${value}`).join(' ');
+            
             equipmentOptions += `
-                <div class="equipment-item" style="opacity: ${canAfford ? '1' : '0.6'};">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong>${item.emoji} ${item.name}</strong>
-                        <span style="color: #888; font-size: 0.8em;">${item.slot}</span>
+                <div class="market-equipment-item" style="opacity: ${canAfford ? '1' : '0.6'};">
+                    <div class="market-equipment-info">
+                        <div class="market-equipment-emoji">${item.emoji}</div>
+                        <div class="market-equipment-name">${item.name}</div>
+                        <div class="market-equipment-slot">${item.slot}</div>
+                        <div class="market-equipment-stats">${statsString}</div>
+                        <div class="market-equipment-cost">💰${item.cost}</div>
                     </div>
-                    <div style="margin-bottom: 8px; font-size: 0.9em;">
-                        ${Object.entries(item.stats).map(([stat, value]) => `<span style="color: #27ae60;">${stat}: +${value}</span>`).join(' ')}
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: bold; color: #f1c40f;">💰 ${item.cost} gold</span>
-                        ${canAfford ? `<button class="choice-btn" onclick="game.actions.buyEquipment('${key}')" style="padding: 6px 12px; font-size: 0.9em;">Buy</button>` : '<span style="color: #e74c3c; font-size: 0.9em;">Too Expensive</span>'}
+                    <div class="market-equipment-actions">
+                        ${canAfford ? `<button class="market-btn" onclick="game.actions.buyEquipment('${key}')">Buy</button>` : `<div class="market-unavailable">Too expensive</div>`}
                     </div>
                 </div>
             `;
@@ -355,24 +333,7 @@ class Scenes {
         return {
             text: `
                 <h2>🏪 Black Market</h2>
-                <p>Shadowy merchants whisper in the dark corners, offering cursed equipment and forbidden artifacts. Their gold glimmers faintly in the light of black candles.</p>
-                
-                <div class="tutorial-info" style="background: rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #3498db;">
-                    <h4>🎓 How Equipment Works:</h4>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li><strong>Equipment Slots:</strong> Each monster can equip weapon, armor, boots, and accessory</li>
-                        <li><strong>Stat Bonuses:</strong> Equipment adds to your monster's base stats</li>
-                        <li><strong>Power Boost:</strong> Better equipment = higher total power for missions</li>
-                        <li><strong>Inventory System:</strong> Items go to your inventory first, then equip them to monsters</li>
-                        <li><strong>Strategic Choice:</strong> Match equipment to monster strengths</li>
-                    </ul>
-                    <p><strong>💡 Tip:</strong> Equip your strongest monsters first for maximum mission power!</p>
-                </div>
-                
-                <div style="background: rgba(75,0,130,0.2); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                    <p><strong>💰 Available Gold:</strong> ${this.game.player.gold}</p>
-                    <p><strong>🎒 Inventory Items:</strong> ${this.game.player.inventory.length}</p>
-                </div>
+                <p>Shadowy merchants offer cursed equipment and forbidden artifacts.</p>
                 ${equipmentOptions}
             `,
             choices: [
@@ -445,26 +406,9 @@ class Scenes {
         return {
             text: `
                 <h2>🌙 Darkness Exploration</h2>
-                <p>Your dungeon still holds many mysteries. Forgotten corridors, secret chambers and forbidden passages await your exploration.</p>
-                <p>Each expedition into the depths can reveal treasures, ancient knowledge, or unexpected encounters...</p>
+                <p>The shadows beckon you to explore the unknown depths of your domain. What secrets will you uncover?</p>
                 
-                <div class="tutorial-info" style="background: rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #3498db;">
-                    <h4>🎓 How Exploration Works:</h4>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li><strong>Energy Cost:</strong> Each exploration action costs 1 energy</li>
-                        <li><strong>Random Discoveries:</strong> You might find gold, reputation, or wild monsters</li>
-                        <li><strong>Wild Monsters:</strong> Sometimes you'll encounter creatures that join you for free</li>
-                        <li><strong>Risk vs Reward:</strong> Deeper exploration can yield better rewards</li>
-                        <li><strong>Daily Activity:</strong> Great way to use remaining energy before resting</li>
-                    </ul>
-                    <p><strong>💡 Tip:</strong> Explore when you have energy left but can't afford missions!</p>
-                </div>
-
-                <div style="background: rgba(25,25,112,0.2); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                    <p><strong>⚡ Available Energy:</strong> ${this.game.player.energy}/${this.game.player.maxEnergy}</p>
-                    <p><strong>🗺️ Exploration Points:</strong> ${this.game.player.explorationPoints}</p>
-                    ${this.game.player.energy === 0 ? '<p class="warning">⚠️ You need energy to explore. Rest to restore energy!</p>' : ''}
-                </div>
+                ${this.game.player.energy === 0 ? '<p class="warning">⚠️ You need energy to explore. Rest to restore energy!</p>' : ''}
             `,
             choices: [
                 { text: `🔍 Search ancient ruins`, action: () => this.game.actions.exploreRuins(), disabled: this.game.player.energy === 0 },
@@ -473,5 +417,25 @@ class Scenes {
                 { text: `🏰 Return to Main Hall`, action: () => this.game.showScene('hub') }
             ]
         };
+    }
+    
+    // Méthode pour générer le message de statut des missions
+    generateMissionStatusMessage(hasAvailableMissions, nextMissionPowerNeeded, nextMissionName, totalPower, nextLevelRequired, nextLevelMissionName) {
+        // Si le joueur a déjà toutes les missions disponibles pour son niveau
+        if (hasAvailableMissions && nextMissionPowerNeeded === null && nextLevelRequired !== null) {
+            return `<p class="info" style="background: rgba(52, 152, 219, 0.1); padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 3px solid #3498db;">🏰 You've completed all missions available at your current dungeon level! <strong>Upgrade your fortress to level ${nextLevelRequired}</strong> to unlock "${nextLevelMissionName}" and more missions.</p>`;
+        }
+        
+        // Si le joueur n'a pas assez de puissance pour la prochaine mission
+        if (nextMissionPowerNeeded !== null) {
+            return `<p class="info" style="background: rgba(255, 193, 7, 0.1); padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 3px solid #f39c12;">💪 You need <strong>${nextMissionPowerNeeded} more power</strong> to unlock "${nextMissionName}" (Current power: ${totalPower})</p>`;
+        }
+        
+        // Si toutes les missions du niveau actuel sont disponibles mais le joueur doit upgrader pour plus
+        if (!hasAvailableMissions && nextLevelRequired !== null) {
+            return `<p class="info" style="background: rgba(52, 152, 219, 0.1); padding: 10px; border-radius: 6px; margin: 10px 0; border-left: 3px solid #3498db;">🏰 <strong>Upgrade your fortress to level ${nextLevelRequired}</strong> to unlock "${nextLevelMissionName}" and start your conquest!</p>`;
+        }
+        
+        return '';
     }
 }
