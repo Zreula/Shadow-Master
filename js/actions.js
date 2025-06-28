@@ -149,7 +149,7 @@ class Actions {
         if (mission.reward.items && Math.random() < 0.4) { // 40% de chance
             const randomItem = mission.reward.items[Math.floor(Math.random() * mission.reward.items.length)];
             this.game.player.inventory.push(randomItem);
-            this.game.addToJournal(`🎁 You find ${this.game.equipment[randomItem].emoji} ${this.game.equipment[randomItem].name}!`);
+            this.game.addToJournal(`You find ${this.game.equipment[randomItem]} ${this.game.equipment[randomItem].name}!`);
         }
         
         let resultText = `
