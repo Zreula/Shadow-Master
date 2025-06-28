@@ -5,6 +5,7 @@ class Game {
         this.ui = new UI();
         this.actions = new Actions(this);
         this.scenes = new Scenes(this);
+        this.combat = new Combat(this);
         
         // État du jeu
         this.currentScene = 'start';
@@ -69,6 +70,9 @@ class Game {
             this.equipment = await this.dataManager.getEquipment();
             this.missions = await this.dataManager.getMissions();
             this.gameConfig = await this.dataManager.getGameConfig();
+            
+            // Initialiser le système de combat
+            await this.combat.initialize();
             
             this.initialized = true;
             
@@ -147,11 +151,14 @@ class Game {
         
         // Bonus d'équipement
         if (monster.equipment) {
-            Object.values(monster.equipment).forEach(item => {
-                if (item && item.stats) {
-                    Object.entries(item.stats).forEach(([stat, value]) => {
-                        baseStats[stat] = (baseStats[stat] || 0) + value;
-                    });
+            Object.values(monster.equipment).forEach(equipId => {
+                if (equipId && this.equipment[equipId]) {
+                    const equipment = this.equipment[equipId];
+                    if (equipment.stats) {
+                        Object.entries(equipment.stats).forEach(([stat, value]) => {
+                            baseStats[stat] = (baseStats[stat] || 0) + value;
+                        });
+                    }
                 }
             });
         }
@@ -162,8 +169,7 @@ class Game {
     // Calcul de la puissance totale de l'armée
     calculateTotalPower() {
         return this.player.monsters.reduce((total, monster) => {
-            const stats = this.calculateMonsterStats(monster);
-            return total + stats.strength + stats.defense + stats.speed + stats.magic;
+            return total + this.combat.calculateMonsterPower(monster);
         }, 0);
     }
     

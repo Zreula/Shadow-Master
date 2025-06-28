@@ -204,6 +204,27 @@ class Actions {
         }
     }
     
+    // Donner de l'expérience à un monstre
+    giveExperience(monsterIndex, amount) {
+        if (monsterIndex < 0 || monsterIndex >= this.game.player.monsters.length) {
+            return;
+        }
+        
+        const monster = this.game.player.monsters[monsterIndex];
+        if (!monster) return;
+        
+        monster.experience = (monster.experience || 0) + amount;
+        
+        // Calcul du niveau basé sur l'expérience (ex: niveau = racine carrée de l'expérience / 2)
+        const newLevel = Math.floor(Math.sqrt(monster.experience / 2)) + 1;
+        
+        if (newLevel > (monster.level || 1)) {
+            const oldLevel = monster.level || 1;
+            monster.level = newLevel;
+            this.game.addToJournal(`🆙 ${monster.name} leveled up! ${oldLevel} → ${newLevel}`);
+        }
+    }
+
     // Actions d'exploration
     exploreRuins() {
         if (this.game.player.energy < 1) {

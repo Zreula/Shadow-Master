@@ -13,6 +13,7 @@ class Scenes {
             case 'market': return this.getMarketScene();
             case 'upgrade': return this.getUpgradeScene();
             case 'explore': return this.getExploreScene();
+            case 'missionPrep': return this.game.combat.getMissionPrepScene();
             default: return this.getHubScene();
         }
     }
@@ -241,8 +242,8 @@ class Scenes {
                             </div>
                         </div>
                         <div class="mission-actions">
-                            <button class="mission-btn" onclick="window.game.actions.startMission('${key}')">
-                                Start Mission
+                            <button class="mission-btn" onclick="window.game.combat.prepareMission('${key}'); window.game.showScene('missionPrep');">
+                                Prepare Mission
                             </button>
                         </div>
                     </div>

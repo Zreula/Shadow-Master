@@ -1,0 +1,132 @@
+{
+  "abilities": {
+    "shield_bash": {
+      "name": "Shield Bash",
+      "description": "Stuns the target for 1 turn",
+      "damage_multiplier": 0.8,
+      "effect": "stun"
+    },
+    "desperate_strike": {
+      "name": "Desperate Strike",
+      "description": "Critical hit when below 50% HP",
+      "damage_multiplier": 1.5,
+      "condition": "low_hp"
+    },
+    "parry": {
+      "name": "Parry",
+      "description": "Reduces incoming damage by 50%",
+      "damage_multiplier": 1.0,
+      "effect": "damage_reduction"
+    },
+    "counter_attack": {
+      "name": "Counter Attack",
+      "description": "Attacks back when hit",
+      "damage_multiplier": 0.7,
+      "effect": "counter"
+    },
+    "formation_attack": {
+      "name": "Formation Attack",
+      "description": "+20% damage per ally alive",
+      "damage_multiplier": 1.2,
+      "effect": "formation_bonus"
+    },
+    "battle_cry": {
+      "name": "Battle Cry",
+      "description": "Boosts all allies' attack",
+      "damage_multiplier": 1.0,
+      "effect": "buff_allies"
+    },
+    "heavy_strike": {
+      "name": "Heavy Strike",
+      "description": "Powerful attack that ignores armor",
+      "damage_multiplier": 2.0,
+      "effect": "armor_pierce"
+    },
+    "defensive_stance": {
+      "name": "Defensive Stance",
+      "description": "Greatly reduces damage taken",
+      "damage_multiplier": 0.5,
+      "effect": "defense_boost"
+    },
+    "sea_legs": {
+      "name": "Sea Legs",
+      "description": "Immune to status effects",
+      "damage_multiplier": 1.0,
+      "effect": "status_immunity"
+    },
+    "commanding_shout": {
+      "name": "Commanding Shout",
+      "description": "Rallies troops, healing allies",
+      "damage_multiplier": 1.0,
+      "effect": "heal_allies"
+    },
+    "dirty_fighting": {
+      "name": "Dirty Fighting",
+      "description": "High crit chance, may poison",
+      "damage_multiplier": 1.3,
+      "effect": "poison"
+    },
+    "intimidate": {
+      "name": "Intimidate",
+      "description": "Reduces enemy attack power",
+      "damage_multiplier": 1.0,
+      "effect": "debuff_enemies"
+    },
+    "tactical_strike": {
+      "name": "Tactical Strike",
+      "description": "Precise attack with high damage",
+      "damage_multiplier": 1.8,
+      "effect": "precision"
+    },
+    "rally_troops": {
+      "name": "Rally Troops",
+      "description": "Revives fallen allies with 1 HP",
+      "damage_multiplier": 1.0,
+      "effect": "revive_allies"
+    },
+    "fortress_defense": {
+      "name": "Fortress Defense",
+      "description": "Massive defense boost",
+      "damage_multiplier": 0.3,
+      "effect": "fortress_mode"
+    }
+  },
+  "monster_abilities": {
+    "shadow_strike": {
+      "name": "Shadow Strike",
+      "description": "Attack from shadows with high crit chance",
+      "damage_multiplier": 1.4,
+      "effect": "critical"
+    },
+    "dark_magic": {
+      "name": "Dark Magic",
+      "description": "Magical attack that bypasses armor",
+      "damage_multiplier": 1.6,
+      "effect": "magic_damage"
+    },
+    "brute_force": {
+      "name": "Brute Force",
+      "description": "Raw physical power",
+      "damage_multiplier": 1.8,
+      "effect": "high_damage"
+    },
+    "life_drain": {
+      "name": "Life Drain",
+      "description": "Heals self while damaging enemy",
+      "damage_multiplier": 1.2,
+      "effect": "lifesteal"
+    },
+    "terror": {
+      "name": "Terror",
+      "description": "Frightens enemies, reducing their effectiveness",
+      "damage_multiplier": 1.0,
+      "effect": "fear"
+    },
+    "rage": {
+      "name": "Rage",
+      "description": "Damage increases as HP decreases",
+      "damage_multiplier": 1.5,
+      "effect": "berserk"
+    }
+  }
+}

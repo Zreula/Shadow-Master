@@ -1,0 +1,131 @@
+{
+    "enemyTypes": {
+        "village_guards": {
+            "name": "Village Guards",
+            "power": 8,
+            "description": "Simple militia armed with basic weapons",
+            "weakness": "stealth",
+            "emoji": "🛡️"
+        },
+        "royal_soldiers": {
+            "name": "Royal Soldiers",
+            "power": 20,
+            "description": "Trained warriors with proper equipment",
+            "weakness": "magic",
+            "emoji": "⚔️"
+        },
+        "holy_knights": {
+            "name": "Holy Knights",
+            "power": 40,
+            "description": "Elite warriors blessed with divine protection",
+            "weakness": "brute",
+            "emoji": "🏰"
+        },
+        "arcane_defenders": {
+            "name": "Arcane Defenders",
+            "power": 35,
+            "description": "Mages protected by magical barriers",
+            "weakness": "stealth",
+            "emoji": "🔮"
+        }
+    },
+    "monsterTypes": {
+        "stealth": {
+            "types": ["Imp", "Shadow", "Wraith", "Assassin"],
+            "bonus": "Excellent against guards and mages",
+            "description": "Masters of surprise and infiltration"
+        },
+        "magic": {
+            "types": ["Sorcerer", "Lich", "Demon", "Warlock"],
+            "bonus": "Excellent against armored foes",
+            "description": "Wielders of dark arcane power"
+        },
+        "brute": {
+            "types": ["Orc", "Troll", "Dragon", "Minotaur"],
+            "bonus": "Excellent against holy warriors",
+            "description": "Raw physical power and intimidation"
+        }
+    },
+    "combatEvents": [
+        {
+            "id": "ambush_opportunity",
+            "text": "Your scouts spot an opportunity to ambush the enemy. Do you take it?",
+            "choices": [
+                {
+                    "text": "🗡️ Launch surprise attack",
+                    "effect": { "player_bonus": 0.3, "risk": 0.1 },
+                    "description": "High reward, small risk"
+                },
+                {
+                    "text": "🛡️ Proceed cautiously",
+                    "effect": { "player_bonus": 0.1, "risk": 0 },
+                    "description": "Safe approach"
+                }
+            ]
+        },
+        {
+            "id": "treasure_distraction",
+            "text": "Your monsters spot unguarded treasure nearby. What are your orders?",
+            "choices": [
+                {
+                    "text": "💰 Grab the treasure",
+                    "effect": { "gold_bonus": 50, "enemy_bonus": 0.2 },
+                    "description": "Extra gold but enemies prepare"
+                },
+                {
+                    "text": "⚔️ Stay focused on mission",
+                    "effect": { "player_bonus": 0.15 },
+                    "description": "Maintain combat advantage"
+                }
+            ]
+        },
+        {
+            "id": "enemy_reinforcements",
+            "text": "Enemy reinforcements are approaching! How do you respond?",
+            "choices": [
+                {
+                    "text": "🏃 Quick strike before they arrive",
+                    "effect": { "player_bonus": 0.25, "risk": 0.3 },
+                    "description": "High risk, high reward"
+                },
+                {
+                    "text": "🛡️ Prepare defensive positions",
+                    "effect": { "player_bonus": 0.1, "enemy_bonus": 0.1 },
+                    "description": "Balanced approach"
+                }
+            ]
+        }
+    ],
+    "outcomeModifiers": {
+        "crushing_victory": {
+            "gold_multiplier": 1.5,
+            "reputation_multiplier": 1.5,
+            "experience_bonus": 3,
+            "probability": 0.15
+        },
+        "victory": {
+            "gold_multiplier": 1.0,
+            "reputation_multiplier": 1.0,
+            "experience_bonus": 2,
+            "probability": 0.5
+        },
+        "narrow_victory": {
+            "gold_multiplier": 0.8,
+            "reputation_multiplier": 0.8,
+            "experience_bonus": 1,
+            "probability": 0.25
+        },
+        "narrow_defeat": {
+            "gold_multiplier": 0,
+            "reputation_multiplier": 0,
+            "experience_bonus": 0,
+            "probability": 0.08
+        },
+        "defeat": {
+            "gold_multiplier": 0,
+            "reputation_multiplier": -0.1,
+            "experience_bonus": 0,
+            "probability": 0.02
+        }
+    }
+}
