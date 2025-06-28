@@ -169,8 +169,11 @@ class Actions {
         
         if (result.casualty && this.game.player.monsters.length > 0) {
             const lostMonster = this.game.player.monsters.splice(Math.floor(Math.random() * this.game.player.monsters.length), 1)[0];
-            resultText += `<p class="error">💀 ${lostMonster.emoji} ${lostMonster.name} was lost in battle!</p>`;
-            this.game.addToJournal(`💀 ${lostMonster.name} died a hero of the shadows...`);
+            // Safety check to ensure monster has required properties
+            const monsterName = lostMonster.name || 'Unknown Monster';
+            const monsterEmoji = lostMonster.emoji || '👹';
+            resultText += `<p class="error">💀 ${monsterEmoji} ${monsterName} was lost in battle!</p>`;
+            this.game.addToJournal(`💀 ${monsterName} died a hero of the shadows...`);
         }
         
         resultText += `
@@ -314,6 +317,7 @@ class Actions {
         }
         
         const newMonster = {
+            id: monsterType,
             type: monsterType,
             name: monster.name,
             emoji: monster.emoji,
@@ -562,6 +566,7 @@ class Actions {
             // Chance d'obtenir un monstre démoniaque
             if (Math.random() < 0.3 && this.game.player.monsters.length < this.game.player.maxMonsters) {
                 const demonMonster = {
+                    id: 'demon',
                     type: 'demon',
                     name: 'Demon',
                     emoji: '😈',
