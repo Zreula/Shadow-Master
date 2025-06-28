@@ -148,8 +148,17 @@ class Actions {
         // Récompenses d'équipement
         if (mission.reward.items && Math.random() < 0.4) { // 40% de chance
             const randomItem = mission.reward.items[Math.floor(Math.random() * mission.reward.items.length)];
-            this.game.player.inventory.push(randomItem);
-            this.game.addToJournal(`You find ${this.game.equipment[randomItem]} ${this.game.equipment[randomItem].name}!`);
+            
+            // Vérifier que l'item existe dans l'équipement
+            if (this.game.equipment[randomItem]) {
+                this.game.player.inventory.push(randomItem);
+                this.game.addToJournal(`You find ${this.game.equipment[randomItem].emoji} ${this.game.equipment[randomItem].name}!`);
+            } else {
+                // Si l'item n'existe pas, donner de l'or supplémentaire à la place
+                const bonusGold = Math.floor(Math.random() * 50) + 25; // 25-75 gold bonus
+                this.game.player.gold += bonusGold;
+                this.game.addToJournal(`You find ancient treasures worth ${bonusGold} gold!`);
+            }
         }
         
         let resultText = `
