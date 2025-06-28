@@ -1,72 +1,72 @@
 {
   "sword": { 
-    "name": "Épée Rouillée", 
+    "name": "Rusty Sword", 
     "emoji": "⚔️", 
     "cost": 80, 
-    "stats": { "force": 2 }, 
+    "stats": { "strength": 2 }, 
     "slot": "weapon" 
   },
   "darkSword": { 
-    "name": "Lame des Ombres", 
+    "name": "Shadow Blade", 
     "emoji": "🗡️", 
     "cost": 200, 
-    "stats": { "force": 4, "magie": 1 }, 
+    "stats": { "strength": 4, "magic": 1 }, 
     "slot": "weapon" 
   },
   "cursedBlade": { 
-    "name": "Lame Maudite", 
+    "name": "Cursed Blade", 
     "emoji": "⚔️", 
     "cost": 500, 
-    "stats": { "force": 6, "magie": 3 }, 
+    "stats": { "strength": 6, "magic": 3 }, 
     "slot": "weapon" 
   },
   "leather": { 
-    "name": "Armure de Cuir", 
+    "name": "Leather Armor", 
     "emoji": "🛡️", 
     "cost": 60, 
     "stats": { "defense": 2 }, 
     "slot": "armor" 
   },
   "chainmail": { 
-    "name": "Cotte de Mailles", 
+    "name": "Chain Mail", 
     "emoji": "🛡️", 
     "cost": 150, 
     "stats": { "defense": 4 }, 
     "slot": "armor" 
   },
   "darkPlate": { 
-    "name": "Armure des Ombres", 
+    "name": "Shadow Armor", 
     "emoji": "🛡️", 
     "cost": 400, 
-    "stats": { "defense": 6, "magie": 2 }, 
+    "stats": { "defense": 6, "magic": 2 }, 
     "slot": "armor" 
   },
   "boots": { 
-    "name": "Bottes de Cuir", 
+    "name": "Leather Boots", 
     "emoji": "👢", 
     "cost": 40, 
-    "stats": { "vitesse": 2 }, 
+    "stats": { "speed": 2 }, 
     "slot": "boots" 
   },
   "shadowBoots": { 
-    "name": "Bottes Fantômes", 
+    "name": "Ghost Boots", 
     "emoji": "👢", 
     "cost": 120, 
-    "stats": { "vitesse": 4, "magie": 1 }, 
+    "stats": { "speed": 4, "magic": 1 }, 
     "slot": "boots" 
   },
   "amulet": { 
-    "name": "Amulette Sombre", 
+    "name": "Dark Amulet", 
     "emoji": "📿", 
     "cost": 180, 
-    "stats": { "magie": 3, "defense": 1 }, 
+    "stats": { "magic": 3, "defense": 1 }, 
     "slot": "accessory" 
   },
   "cursedRing": { 
-    "name": "Anneau Maudit", 
+    "name": "Cursed Ring", 
     "emoji": "💍", 
     "cost": 250, 
-    "stats": { "magie": 4, "force": 2 }, 
+    "stats": { "magic": 4, "strength": 2 }, 
     "slot": "accessory" 
   }
 }

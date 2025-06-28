@@ -1,48 +1,41 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maître des Ombres - RPG Textuel</title>
+    <title>Shadow Master - Text RPG</title>
     <link rel="stylesheet" href="style.css?v=202512262100">
 </head>
 <body>
     <div class="game-container">
         <header class="game-header">
-            <h1>🌙 Maître des Ombres</h1>
-            <div class="version-info">Version Modulaire</div>
-            <div class="language-switcher">
-                <button id="langBtn" class="lang-btn" title="Changer la langue / Change language">
-                    <span class="flag">🇫🇷</span>
-                    <span class="lang-text">FR</span>
-                </button>
-            </div>
+            <h1>🌙 Shadow Master</h1>
         </header>
 
         <main class="game-main">
             <div class="stats-panel">
                 <div class="stat-item">
-                    <span class="stat-label">💰 Or:</span>
+                    <span class="stat-label">💰 Gold:</span>
                     <span id="gold" class="stat-value">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">⭐ Réputation:</span>
+                    <span class="stat-label">⭐ Reputation:</span>
                     <span id="reputation" class="stat-value">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">👹 Monstres:</span>
+                    <span class="stat-label">👹 Monster:</span>
                     <span id="monsterCount" class="stat-value">0</span>/<span id="maxMonsters" class="stat-value">5</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">🏰 Donjon:</span>
+                    <span class="stat-label">🏰 Dungeon:</span>
                     <span id="dungeonLevel" class="stat-value">1</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">⚡ Énergie:</span>
+                    <span class="stat-label">⚡ Energy:</span>
                     <span id="energy" class="stat-value">5/5</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">📅 Jour:</span>
+                    <span class="stat-label">📅 Day:</span>
                     <span id="day" class="stat-value">1</span>
                 </div>
             </div>
@@ -50,8 +43,8 @@
             <div class="game-content">
                 <div class="story-section">
                     <div id="storyText" class="story-text">
-                        <h2>Chargement...</h2>
-                        <p>Initialisation du jeu en cours...</p>
+                        <h2>Loading...</h2>
+                        <p>Initializing game...</p>
                     </div>
                     <div id="choicesContainer" class="choices-container">
                         <!-- Les choix apparaîtront ici -->
@@ -60,34 +53,34 @@
 
                 <div class="side-panels">
                     <div class="monsters-panel">
-                        <h3>👹 Légions</h3>
+                        <h3>👹 Legions</h3>
                         <div id="monstersList" class="monsters-list">
-                            <p class="empty">Aucun monstre recruté</p>
+                            <p class="empty">No monsters recruited</p>
                         </div>
                     </div>
 
                     <div class="inventory-panel">
-                        <h3>🎒 Inventaire</h3>
+                        <h3>🎒 Inventory</h3>
                         <div id="inventory" class="inventory">
-                            <p class="empty">Inventaire vide</p>
+                            <p class="empty">Empty inventory</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="journal-section">
-                <h3>📖 Journal des Ombres</h3>
+                <h3>📖 Shadow Diary</h3>
                 <div id="journal" class="journal">
-                    <p>Votre règne commence...</p>
+                    <p>Your reign begins...</p>
                 </div>
             </div>
         </main>
         <footer class="game-footer">
             <div class="save-controls">
-                <button id="saveGame" class="save-btn">💾 Sauvegarder</button>
-                <button id="loadGame" class="save-btn">📁 Charger</button>
-                <button id="newGame" class="save-btn">🎮 Nouveau Jeu</button>
-                <button id="deleteGame" class="save-btn danger">🗑️ Supprimer</button>
+                <button id="saveGame" class="save-btn">💾 Save</button>
+                <button id="loadGame" class="save-btn">📁 Load</button>
+                <button id="newGame" class="save-btn">🎮 New Game</button>
+                <button id="deleteGame" class="save-btn danger">🗑️ Delete</button>
             </div>
             <div class="game-info">
                 <p>Made by Zreula</p>
@@ -95,7 +88,6 @@
         </footer>
     </div>
     <!-- Chargement des modules JavaScript dans l'ordre -->
-    <script src="js/translation.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/dataManager.js"></script>
     <script src="js/ui.js"></script>

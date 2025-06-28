@@ -5,7 +5,7 @@ class Utils {
     }
     
     static formatGold(amount) {
-        return `${amount} or`;
+        return `${amount} gold`;
     }
     
     static formatStats(stats) {
@@ -14,24 +14,24 @@ class Utils {
     
     static getDifficultyColor(difficulty) {
         const colors = {
-            'Facile': '#27ae60',
-            'Moyen': '#f39c12',
-            'Difficile': '#e74c3c',
-            'Très Difficile': '#8e44ad',
-            'Épique': '#2c3e50',
-            'Légendaire': '#000000',
-            'Mythique': '#8B0000',
-            'Cosmique': '#4B0082'
+            'Easy': '#27ae60',
+            'Medium': '#f39c12',
+            'Hard': '#e74c3c',
+            'Very Hard': '#8e44ad',
+            'Epic': '#2c3e50',
+            'Legendary': '#000000',
+            'Mythic': '#8B0000',
+            'Cosmic': '#4B0082'
         };
         return colors[difficulty] || '#888';
     }
     
     static getRarityColor(rarity) {
         const colors = {
-            'commun': '#888',
+            'common': '#888',
             'rare': '#4a90e2',
-            'épique': '#9b59b6',
-            'légendaire': '#f39c12'
+            'epic': '#9b59b6',
+            'legendary': '#f39c12'
         };
         return colors[rarity] || '#888';
     }
@@ -44,7 +44,7 @@ class Utils {
             }
             return await response.json();
         } catch (error) {
-            console.error(`Erreur lors du chargement de ${url}:`, error);
+            console.error(`Error loading ${url}:`, error);
             return null;
         }
     }

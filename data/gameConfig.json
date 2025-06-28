@@ -2,90 +2,90 @@
   "dungeonUpgrades": {
     "2": { 
       "cost": 800, 
-      "name": "Catacombes", 
+      "name": "Catacombs", 
       "maxMonsters": 8, 
-      "newFeatures": ["Marché Noir"], 
+      "newFeatures": ["Black Market"], 
       "maxEnergy": 6 
     },
     "3": { 
       "cost": 2000, 
-      "name": "Crypte Profonde", 
+      "name": "Deep Crypt", 
       "maxMonsters": 12, 
-      "newFeatures": ["Laboratoire Alchimique"], 
+      "newFeatures": ["Alchemical Laboratory"], 
       "maxEnergy": 7 
     },
     "4": { 
       "cost": 5000, 
-      "name": "Citadelle des Ombres", 
+      "name": "Shadow Citadel", 
       "maxMonsters": 16, 
-      "newFeatures": ["Arène de Combat"], 
+      "newFeatures": ["Combat Arena"], 
       "maxEnergy": 8 
     },
     "5": { 
       "cost": 10000, 
-      "name": "Forteresse Maudite", 
+      "name": "Cursed Fortress", 
       "maxMonsters": 20, 
-      "newFeatures": ["Portail Démoniaque"], 
+      "newFeatures": ["Demonic Portal"], 
       "maxEnergy": 10 
     }
   },
   "randomEvents": [
     {
-      "text": "Un voyageur perdu offre de l'or contre sa liberté...",
+      "text": "A lost traveler offers gold for his freedom...",
       "choices": [
-        { "text": "Accepter l'or (+50 or)", "action": "addGold", "value": 50 },
-        { "text": "Le dévorer (+5 réputation)", "action": "addReputation", "value": 5 }
+        { "text": "Accept the gold (+50 gold)", "action": "addGold", "value": 50 },
+        { "text": "Devour him (+5 reputation)", "action": "addReputation", "value": 5 }
       ]
     },
     {
-      "text": "Des aventuriers tentent d'infiltrer votre donjon !",
+      "text": "Adventurers attempt to infiltrate your dungeon!",
       "choices": [
-        { "text": "Les combattre", "action": "defendDungeon" },
-        { "text": "Négocier", "action": "negotiateWithAdventurers" }
+        { "text": "Fight them", "action": "defendDungeon" },
+        { "text": "Negotiate", "action": "negotiateWithAdventurers" }
       ]
     },
     {
-      "text": "Un démon propose un pacte mystérieux...",
+      "text": "A demon offers a mysterious pact...",
       "choices": [
-        { "text": "Accepter le pacte", "action": "demonPact" },
-        { "text": "Refuser prudemment", "action": "addJournalEntry", "value": "Vous refusez le pacte démoniaque." }
+        { "text": "Accept the pact", "action": "demonPact" },
+        { "text": "Refuse cautiously", "action": "addJournalEntry", "value": "You refuse the demonic pact." }
       ]
     }
   ],
   "discoveries": {
     "ruins": [
-      { "text": "Vous découvrez un coffre rempli d'or ancien !", "gold": 50 },
-      { "text": "Des ossements d'anciens héros... leur terreur nourrit votre réputation.", "reputation": 5 },
-      { "text": "Une gemme maudite pulse d'énergie maléfique...", "gold": 80 },
-      { "text": "Vous ne trouvez que poussière et regrets...", "gold": 0 }
+      { "text": "You discover a chest filled with ancient gold!", "gold": 50 },
+      { "text": "Bones of ancient heroes... their terror feeds your reputation.", "reputation": 5 },
+      { "text": "A cursed gem pulses with malevolent energy...", "gold": 80 },
+      { "text": "You find only dust and regrets...", "gold": 0 }
     ],
     "whispers": [
-      { "text": "Les murmures vous guident vers une cache secrète... +60 or !", "gold": 60 },
-      { "text": "Les esprits partagent leurs connaissances... +6 réputation !", "reputation": 6 },
-      { "text": "Les voix se taisent, vous laissant dans le silence..." }
+      { "text": "The whispers guide you to a secret cache... +60 gold!", "gold": 60 },
+      { "text": "The spirits share their knowledge... +6 reputation!", "reputation": 6 },
+      { "text": "The voices fall silent, leaving you in silence..." }
     ],
     "depths": [
-      { "text": "Vous découvrez une veine d'or noir...", "gold": 100 },
-      { "text": "Des artefacts maudits augmentent votre influence...", "reputation": 10 },
-      { "text": "Les profondeurs restent silencieuses...", "gold": 0 }
+      { "text": "You discover a vein of black gold...", "gold": 100 },
+      { "text": "Cursed artifacts increase your influence...", "reputation": 10 },
+      { "text": "The depths remain silent...", "gold": 0 }
     ]
   },
   "meditations": [
-    "Vous méditez sur les mystères des ténèbres...",
-    "Les ombres vous murmurent des secrets anciens...",
-    "Votre connexion avec les forces obscures se renforce...",
-    "L'énergie maléfique coule en vous comme un fleuve noir..."
+    "You meditate on the mysteries of darkness...",
+    "The shadows whisper ancient secrets to you...",
+    "Your connection to dark forces strengthens...",
+    "Malevolent energy flows through you like a black river..."
   ],
   "combatScenarios": [
-    "Vos monstres frappent dans l'ombre ! L'effet de surprise est total.",
-    "Le combat fait rage pendant des heures. Vos créatures montrent leur supériorité.",
-    "Les défenseurs tentent une résistance héroïque, mais vos légions sont implacables.",
-    "Une victoire écrasante ! L'ennemi fuit en abandonnant tout derrière lui.",
-    "Vos monstres sèment la terreur avec une efficacité terrifiante."
+    "Your monsters strike from the shadows! The surprise is total.",
+    "The battle rages for hours. Your creatures show their superiority.",
+    "The defenders attempt heroic resistance, but your legions are relentless.",
+    "A crushing victory! The enemy flees, abandoning everything behind.",
+    "Your monsters spread terror with terrifying efficiency."
   ],
   "restEvents": [
-    { "text": "Vos monstres trouvent de l'or pendant votre sommeil...", "gold": 20 },
-    { "text": "Votre réputation grandit dans l'ombre...", "reputation": 3 },
-    { "text": "Une nuit paisible vous a restauré...", "gold": 0 }
+    { "text": "Your monsters find gold while you sleep...", "gold": 20 },
+    { "text": "Your reputation grows in the shadows...", "reputation": 3 },
+    { "text": "A peaceful night has restored you...", "gold": 0 }
   ]
 }

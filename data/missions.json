@@ -1,200 +1,183 @@
 {
   "village": {
-    "name": "Attaquer un petit village",
-    "difficulty": "Facile",
+    "name": "Attack a small village",
+    "difficulty": "Easy",
     "reward": { "gold": 40, "reputation": 5, "items": ["sword"] },
     "requiredPower": 6,
-    "description": "Un village sans défense, parfait pour s'entraîner.",
+    "description": "A defenseless village, perfect for training.",
     "unlockLevel": 1,
     "energyCost": 1
   },
   "ferme": {
-    "name": "Terroriser une ferme isolée",
-    "difficulty": "Facile",
+    "name": "Terrorize an isolated farm",
+    "difficulty": "Easy",
     "reward": { "gold": 35, "reputation": 4, "items": ["boots"] },
     "requiredPower": 8,
-    "description": "Des fermiers sans défense avec quelques outils agricoles.",
+    "description": "Defenseless farmers with some farming tools.",
     "unlockLevel": 1,
     "energyCost": 1
   },
   "caravane": {
-    "name": "Piller une caravane marchande",
-    "difficulty": "Moyen",
+    "name": "Raid a merchant caravan",
+    "difficulty": "Medium",
     "reward": { "gold": 80, "reputation": 10, "items": ["leather", "boots"] },
     "requiredPower": 20,
-    "description": "Des marchands voyagent avec des gardes.",
+    "description": "Merchants traveling with guards.",
     "unlockLevel": 1,
     "energyCost": 1
   },
   "convoi": {
-    "name": "Attaquer un convoi militaire",
-    "difficulty": "Moyen",
+    "name": "Attack a military convoy",
+    "difficulty": "Medium",
     "reward": { "gold": 95, "reputation": 12, "items": ["sword", "leather"] },
     "requiredPower": 28,
-    "description": "Soldats transportant des provisions militaires.",
+    "description": "Soldiers transporting military supplies.",
     "unlockLevel": 1,
     "energyCost": 1
   },
   "chateau": {
-    "name": "Assiéger un petit château",
-    "difficulty": "Difficile",
+    "name": "Besiege a small castle",
+    "difficulty": "Hard",
     "reward": { "gold": 180, "reputation": 20, "items": ["chainmail"] },
     "requiredPower": 40,
-    "description": "Un château fortifié avec une garnison.",
+    "description": "A fortified castle with a garrison.",
+    "unlockLevel": 2,
+    "energyCost": 2
+  },
+    "port": {
+    "name": "Raid a merchant port",
+    "difficulty": "Hard",
+    "reward": { "gold": 190, "reputation": 22, "items": ["amulet", "chainmail"] },
+    "requiredPower": 48,
+    "description": "A busy port with merchant ships and guards.",
+    "unlockLevel": 2,
+    "energyCost": 2
+  },
+    "monastere": {
+    "name": "Desecrate a monastery",
+    "difficulty": "Hard",
+    "reward": { "gold": 170, "reputation": 28, "items": ["holyRelic", "magic"] },
+    "requiredPower": 52,
+    "description": "A sacred place protected by monks and divine power.",
     "unlockLevel": 2,
     "energyCost": 2
   },
   "mine": {
-    "name": "Conquérir une mine d'or",
-    "difficulty": "Difficile",
+    "name": "Conquer a gold mine",
+    "difficulty": "Hard",
     "reward": { "gold": 220, "reputation": 18, "items": ["darkSword"] },
     "requiredPower": 55,
-    "description": "Une mine bien gardée regorgeant d'or.",
+    "description": "A well-guarded mine overflowing with gold.",
     "unlockLevel": 2,
     "energyCost": 2
   },
-  "port": {
-    "name": "Razzier un port marchand",
-    "difficulty": "Difficile",
-    "reward": { "gold": 190, "reputation": 22, "items": ["amulet", "chainmail"] },
-    "requiredPower": 48,
-    "description": "Un port fortifié avec des navires de guerre.",
-    "unlockLevel": 2,
-    "energyCost": 2
-  },
-  "academie": {
-    "name": "Attaquer l'académie de magie",
-    "difficulty": "Très Difficile",
-    "reward": { "gold": 280, "reputation": 25, "items": ["amulet", "darkSword"] },
-    "requiredPower": 75,
-    "description": "Des mages novices protègent leur sanctuaire.",
-    "unlockLevel": 2,
-    "energyCost": 2
-  },
-  "monastery": {
-    "name": "Profaner un monastère",
-    "difficulty": "Très Difficile",
-    "reward": { "gold": 350, "reputation": 35, "items": ["darkSword", "amulet"] },
-    "requiredPower": 85,
-    "description": "Des moines gardent des reliques sacrées.",
+
+  "manoir": {
+    "name": "Invade a noble manor",
+    "difficulty": "Hard",
+    "reward": { "gold": 210, "reputation": 24, "items": ["noble", "amulet"] },
+    "requiredPower": 58,
+    "description": "A luxurious manor of a rich nobleman.",
     "unlockLevel": 3,
     "energyCost": 2
   },
-  "temple": {
-    "name": "Souiller le temple solaire",
-    "difficulty": "Très Difficile",
-    "reward": { "gold": 320, "reputation": 40, "items": ["cursedRing", "shadowBoots"] },
-    "requiredPower": 92,
-    "description": "Les prêtres du soleil résistent avec une magie divine.",
+  "bibliotheque": {
+    "name": "Raid an ancient library",
+    "difficulty": "Very Hard",
+    "reward": { "gold": 150, "reputation": 30, "items": ["ancientTome", "magic"] },
+    "requiredPower": 62,
+    "description": "A library filled with forbidden knowledge.",
     "unlockLevel": 3,
-    "energyCost": 2
+    "energyCost": 3
   },
-  "fortress": {
-    "name": "Conquérir une forteresse royale",
-    "difficulty": "Épique",
-    "reward": { "gold": 600, "reputation": 50, "items": ["darkPlate", "cursedRing"] },
-    "requiredPower": 120,
-    "description": "La plus grande forteresse du royaume.",
-    "unlockLevel": 4,
+  "tour": {
+    "name": "Assault a wizard's tower",
+    "difficulty": "Very Hard",
+    "reward": { "gold": 250, "reputation": 32, "items": ["wizardStaff", "magic", "ancientTome"] },
+    "requiredPower": 70,
+    "description": "A tower filled with powerful magical defenses.",
+    "unlockLevel": 3,
     "energyCost": 3
   },
   "citadelle": {
-    "name": "Assiéger la citadelle des paladins",
-    "difficulty": "Épique",
-    "reward": { "gold": 680, "reputation": 55, "items": ["cursedBlade", "darkPlate"] },
-    "requiredPower": 145,
-    "description": "Les plus nobles guerriers défendent leur bastion sacré.",
+    "name": "Storm a great citadel",
+    "difficulty": "Very Hard",
+    "reward": { "gold": 280, "reputation": 35, "items": ["royalSword", "chainmail", "shield"] },
+    "requiredPower": 75,
+    "description": "A massive citadel with elite guards.",
+    "unlockLevel": 3,
+    "energyCost": 3
+  },
+  "necropole": {
+    "name": "Conquer an ancient necropolis",
+    "difficulty": "Very Hard",
+    "reward": { "gold": 200, "reputation": 40, "items": ["necroStaff", "cursedArmor"] },
+    "requiredPower": 80,
+    "description": "An ancient city of the dead, filled with undead guardians.",
     "unlockLevel": 4,
     "energyCost": 3
   },
-  "tour_mage": {
-    "name": "Détruire la tour de l'archimage",
-    "difficulty": "Épique",
-    "reward": { "gold": 750, "reputation": 60, "items": ["cursedRing", "amulet"] },
-    "requiredPower": 165,
-    "description": "L'archimage et ses apprentis maîtrisent une magie redoutable.",
+  "temple": {
+    "name": "Desecrate a sacred temple",
+    "difficulty": "Very Hard",
+    "reward": { "gold": 300, "reputation": 38, "items": ["holyRelic", "magic", "amulet"] },
+    "requiredPower": 85,
+    "description": "A temple protected by divine magic and holy warriors.",
     "unlockLevel": 4,
     "energyCost": 3
   },
-  "legion": {
-    "name": "Anéantir une légion impériale",
-    "difficulty": "Épique",
-    "reward": { "gold": 820, "reputation": 65, "items": ["darkPlate", "cursedBlade"] },
-    "requiredPower": 185,
-    "description": "Mille soldats d'élite en formation de bataille.",
+  "forteresse": {
+    "name": "Siege an enemy fortress",
+    "difficulty": "Extreme",
+    "reward": { "gold": 350, "reputation": 42, "items": ["legendaryWeapon", "dragonScale"] },
+    "requiredPower": 95,
+    "description": "An imposing fortress with the most elite defenders.",
     "unlockLevel": 4,
-    "energyCost": 3
+    "energyCost": 4
   },
-  "sanctuaire": {
-    "name": "Corrompre le sanctuaire divin",
-    "difficulty": "Épique",
-    "reward": { "gold": 900, "reputation": 70, "items": ["cursedBlade", "cursedRing"] },
-    "requiredPower": 210,
-    "description": "Le lieu le plus sacré, protégé par des anges gardiens.",
-    "unlockLevel": 4,
-    "energyCost": 3
-  },
-  "dragon_garde": {
-    "name": "Défier le dragon gardien",
-    "difficulty": "Légendaire",
-    "reward": { "gold": 1100, "reputation": 80, "items": ["cursedBlade"] },
-    "requiredPower": 240,
-    "description": "Un ancien dragon d'or protège un trésor légendaire.",
-    "unlockLevel": 5,
-    "energyCost": 3
-  },
-  "capital": {
-    "name": "Raser la capitale",
-    "difficulty": "Légendaire",
-    "reward": { "gold": 1200, "reputation": 90, "items": ["cursedBlade"] },
-    "requiredPower": 280,
-    "description": "L'affrontement final contre le roi et ses héros.",
-    "unlockLevel": 5,
-    "energyCost": 3
-  },
-  "heros_legendaires": {
-    "name": "Combattre les héros légendaires",
-    "difficulty": "Légendaire",
-    "reward": { "gold": 1400, "reputation": 100, "items": ["cursedBlade", "darkPlate"] },
-    "requiredPower": 320,
-    "description": "Les plus grands héros de tous les temps unissent leurs forces.",
+  "palais": {
+    "name": "Infiltrate a royal palace",
+    "difficulty": "Extreme",
+    "reward": { "gold": 500, "reputation": 50, "items": ["crown", "royalScepter", "legendaryWeapon"] },
+    "requiredPower": 120,
+    "description": "The ultimate challenge: a royal palace with the king's guard.",
     "unlockLevel": 5,
     "energyCost": 4
   },
-  "conseil_mages": {
-    "name": "Détruire le conseil des archimages",
-    "difficulty": "Légendaire",
-    "reward": { "gold": 1600, "reputation": 110, "items": ["cursedRing", "amulet"] },
-    "requiredPower": 365,
-    "description": "Les douze archimages les plus puissants du monde.",
-    "unlockLevel": 5,
-    "energyCost": 4
-  },
-  "armee_celeste": {
-    "name": "Affronter l'armée céleste",
-    "difficulty": "Mythique",
-    "reward": { "gold": 1800, "reputation": 120, "items": ["cursedBlade", "cursedRing"] },
-    "requiredPower": 420,
-    "description": "Les anges descendent des cieux pour vous arrêter.",
-    "unlockLevel": 5,
-    "energyCost": 4
-  },
-  "dieu_lumiere": {
-    "name": "Défier le dieu de la lumière",
-    "difficulty": "Mythique",
-    "reward": { "gold": 2200, "reputation": 150, "items": ["cursedBlade", "darkPlate", "cursedRing"] },
-    "requiredPower": 500,
-    "description": "L'ultime confrontation contre une divinité elle-même.",
+  "capitale": {
+    "name": "Conquer the capital city",
+    "difficulty": "Legendary",
+    "reward": { "gold": 1000, "reputation": 100, "items": ["emperorCrown", "legendaryWeapon", "dragonScale"] },
+    "requiredPower": 150,
+    "description": "The greatest challenge: conquering the entire capital city.",
     "unlockLevel": 5,
     "energyCost": 5
   },
-  "apocalypse": {
-    "name": "Déclencher l'apocalypse",
-    "difficulty": "Cosmique",
-    "reward": { "gold": 3000, "reputation": 200, "items": ["cursedBlade", "darkPlate", "cursedRing", "amulet"] },
-    "requiredPower": 650,
-    "description": "Détruire la réalité elle-même et régner sur les cendres du monde.",
+  "dragon": {
+    "name": "Challenge an ancient dragon",
+    "difficulty": "Legendary",
+    "reward": { "gold": 800, "reputation": 80, "items": ["dragonHeart", "dragonScale", "legendaryWeapon"] },
+    "requiredPower": 140,
+    "description": "Face the ultimate monster: an ancient, powerful dragon.",
     "unlockLevel": 5,
     "energyCost": 5
+  },
+  "enfer": {
+    "name": "Invade the depths of Hell",
+    "difficulty": "Mythical",
+    "reward": { "gold": 1500, "reputation": 150, "items": ["demonCrown", "hellfire", "soulStealer"] },
+    "requiredPower": 200,
+    "description": "The most dangerous mission: invading Hell itself.",
+    "unlockLevel": 6,
+    "energyCost": 6
+  },
+  "paradis": {
+    "name": "Storm the gates of Heaven",
+    "difficulty": "Mythical",
+    "reward": { "gold": 2000, "reputation": 200, "items": ["angelicWings", "holyGrail", "divineSword"] },
+    "requiredPower": 250,
+    "description": "The ultimate blasphemy: attacking Heaven itself.",
+    "unlockLevel": 6,
+    "energyCost": 6
   }
 }

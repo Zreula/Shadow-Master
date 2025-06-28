@@ -5,12 +5,6 @@ let game;
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Initialisation du jeu Maître des Ombres...');
     
-    // Initialiser la traduction et mettre à jour l'interface
-    if (window.translation) {
-        window.translation.updateUI();
-        updateLanguageButton(window.translation.getCurrentLanguage());
-    }
-    
     // Création de l'instance de jeu
     game = new Game();
     
@@ -42,7 +36,6 @@ function attachGameControlButtons() {
     const loadBtn = document.getElementById('loadGame');
     const newGameBtn = document.getElementById('newGame');
     const deleteBtn = document.getElementById('deleteGame');
-    const langBtn = document.getElementById('langBtn');
     
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
@@ -63,7 +56,7 @@ function attachGameControlButtons() {
     if (newGameBtn) {
         newGameBtn.addEventListener('click', () => {
             if (window.game) {
-                const message = window.translation ? window.translation.t('confirmNewGame') : 'Êtes-vous sûr de vouloir commencer un nouveau jeu ? Toute progression non sauvegardée sera perdue.';
+                const message = 'Are you sure you want to start a new game? Any unsaved progress will be lost.';
                 const confirmNew = confirm(message);
                 if (confirmNew) {
                     window.game.newGame();
@@ -74,11 +67,11 @@ function attachGameControlButtons() {
     
     if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
-            const confirmMessage = window.translation ? window.translation.t('confirmDelete') : 'Êtes-vous sûr de vouloir supprimer définitivement votre sauvegarde ?';
+            const confirmMessage = 'Are you sure you want to permanently delete your save?';
             const confirmDelete = confirm(confirmMessage);
             if (confirmDelete) {
                 localStorage.removeItem('shadowMasterSave');
-                const deletedMessage = window.translation ? window.translation.t('saveDeleted') : 'Sauvegarde supprimée !';
+                const deletedMessage = 'Save deleted!';
                 alert(deletedMessage);
                 if (window.game) {
                     window.game.newGame();
@@ -87,39 +80,7 @@ function attachGameControlButtons() {
         });
     }
     
-    if (langBtn) {
-        langBtn.addEventListener('click', () => {
-            if (window.translation) {
-                const currentLang = window.translation.getCurrentLanguage();
-                const newLang = currentLang === 'fr' ? 'en' : 'fr';
-                window.translation.setLanguage(newLang);
-                
-                // Mettre à jour l'apparence du bouton
-                updateLanguageButton(newLang);
-            }
-        });
-    }
-    
     console.log('Gestionnaires d\'événements attachés aux boutons de contrôle');
-}
-
-// Fonction pour mettre à jour l'apparence du bouton de langue
-function updateLanguageButton(lang) {
-    const langBtn = document.getElementById('langBtn');
-    if (langBtn) {
-        const flag = langBtn.querySelector('.flag');
-        const text = langBtn.querySelector('.lang-text');
-        
-        if (lang === 'fr') {
-            flag.textContent = '🇫🇷';
-            text.textContent = 'FR';
-            langBtn.title = 'Changer la langue / Change language';
-        } else {
-            flag.textContent = '🇺🇸';
-            text.textContent = 'EN';
-            langBtn.title = 'Change language / Changer la langue';
-        }
-    }
 }
 
 // Fonctions globales pour l'interface (appelées depuis le HTML)

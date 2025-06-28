@@ -10,7 +10,7 @@ class DataManager {
     
     async loadAllData() {
         try {
-            console.log('Chargement des données...');
+            console.log('Loading data...');
             
             // Chargement parallèle de tous les fichiers JSON
             const [monstersData, equipmentData, missionsData, gameConfigData] = await Promise.all([
@@ -27,14 +27,14 @@ class DataManager {
             
             if (this.monsters && this.equipment && this.missions && this.gameConfig) {
                 this.loaded = true;
-                console.log('Toutes les données chargées avec succès');
+                console.log('All data loaded successfully');
                 return true;
             } else {
-                console.error('Erreur lors du chargement des données');
+                console.error('Error loading data');
                 return false;
             }
         } catch (error) {
-            console.error('Erreur critique lors du chargement des données:', error);
+            console.error('Critical error loading data:', error);
             return false;
         }
     }
@@ -43,43 +43,14 @@ class DataManager {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        const monsters = this.monsters || {};
-        
-        // Appliquer les traductions si nécessaire
-        if (window.translation && window.translation.getCurrentLanguage() !== 'fr') {
-            const translatedMonsters = {};
-            Object.entries(monsters).forEach(([key, monster]) => {
-                translatedMonsters[key] = {
-                    ...monster,
-                    name: window.translation.getMonsterName(key, monster.name),
-                    description: window.translation.getMonsterDescription(key, monster.description)
-                };
-            });
-            return translatedMonsters;
-        }
-        
-        return monsters;
+        return this.monsters || {};
     }
     
     async getEquipment() {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        const equipment = this.equipment || {};
-        
-        // Appliquer les traductions si nécessaire
-        if (window.translation && window.translation.getCurrentLanguage() !== 'fr') {
-            const translatedEquipment = {};
-            Object.entries(equipment).forEach(([key, item]) => {
-                translatedEquipment[key] = {
-                    ...item,
-                    name: window.translation.getEquipmentName(key, item.name)
-                };
-            });
-            return translatedEquipment;
-        }
-        
-        return equipment;
+        return this.equipment || {};
     }
     
     async getMissions() {
@@ -93,19 +64,16 @@ class DataManager {
         if (!this.loaded) {
             await this.loadAllData();
         }
-        const config = this.gameConfig || {};
-        return window.translation ? window.translation.getGameData('gameConfig', config) : config;
+        return this.gameConfig || {};
     }
     
     // Méthodes utilitaires pour accéder aux données spécifiques
     getDungeonUpgrades() {
-        const data = this.gameConfig?.dungeonUpgrades || {};
-        return window.translation ? window.translation.getGameData('dungeonUpgrades', data) : data;
+        return this.gameConfig?.dungeonUpgrades || {};
     }
     
     getRandomEvents() {
-        const data = this.gameConfig?.randomEvents || [];
-        return window.translation ? window.translation.getGameData('randomEvents', data) : data;
+        return this.gameConfig?.randomEvents || [];
     }
     
     getDiscoveries(type) {

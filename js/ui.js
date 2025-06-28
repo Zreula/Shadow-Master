@@ -30,31 +30,29 @@ class UI {
     }
     
     updateEmptyMessages() {
-        if (!window.translation) return;
-        
         const monstersEmpty = document.querySelector('.monsters-list .empty');
         if (monstersEmpty) {
-            monstersEmpty.textContent = window.translation.t('noMonsters');
+            monstersEmpty.textContent = 'No monsters recruited';
         }
         
         const inventoryEmpty = document.querySelector('.inventory .empty');
         if (inventoryEmpty) {
-            inventoryEmpty.textContent = window.translation.t('emptyInventory');
+            inventoryEmpty.textContent = 'Empty inventory';
         }
     }
     
     showLoading() {
         // Afficher un indicateur de chargement si nécessaire
-        console.log('Chargement en cours...');
+        console.log('Loading...');
     }
     
     hideLoading() {
-        console.log('Chargement terminé');
+        console.log('Loading complete');
     }
     
     showError(message) {
-        console.error('Erreur UI:', message);
-        alert('Erreur: ' + message);
+        console.error('UI Error:', message);
+        alert('Error: ' + message);
     }
     
     updateStats(stats) {
@@ -82,31 +80,27 @@ class UI {
         if (!container) return;
         
         if (monsters.length === 0) {
-            const emptyMessage = window.translation ? window.translation.t('noMonsters') : 'Aucun monstre recruté';
+            const emptyMessage = 'No monsters recruited';
             container.innerHTML = `<p class="empty">${emptyMessage}</p>`;
             return;
         }
         
         container.innerHTML = monsters.map((monster, index) => {
             const totalStats = this.calculateMonsterStats(monster);
-            // Utiliser la traduction pour le nom du monstre si disponible
-            const monsterName = window.translation ? 
-                window.translation.getMonsterName(monster.id, monster.name) : 
-                monster.name;
-                
+            
             return `
                 <div class="monster-card">
                     <div class="monster-header">
                         <div class="monster-emoji">${monster.emoji}</div>
                         <div class="monster-info">
-                            <div class="monster-name">${monsterName}</div>
-                            <div class="monster-level">${window.translation ? window.translation.t('level') : 'Niveau'} ${monster.level}</div>
+                            <div class="monster-name">${monster.name}</div>
+                            <div class="monster-level">Level ${monster.level}</div>
                         </div>
                     </div>
                     <div class="monster-stats">
                         <div class="stat-group">
                             <span class="stat-label">⚔️</span>
-                            <span class="stat-value">${totalStats.force}</span>
+                            <span class="stat-value">${totalStats.strength}</span>
                         </div>
                         <div class="stat-group">
                             <span class="stat-label">🛡️</span>
@@ -114,27 +108,24 @@ class UI {
                         </div>
                         <div class="stat-group">
                             <span class="stat-label">⚡</span>
-                            <span class="stat-value">${totalStats.vitesse}</span>
+                            <span class="stat-value">${totalStats.speed}</span>
                         </div>
                         <div class="stat-group">
                             <span class="stat-label">🔮</span>
-                            <span class="stat-value">${totalStats.magie}</span>
+                            <span class="stat-value">${totalStats.magic}</span>
                         </div>
                     </div>
                     ${monster.equipment ? `<div class="monster-equipment">
                         ${Object.values(monster.equipment).filter(eq => eq).map(eq => {
-                            const equipName = window.translation ? 
-                                window.translation.getEquipmentName(eq.id, eq.name) : 
-                                eq.name;
-                            return `<span class="equipment-item">${eq.emoji} ${equipName}</span>`;
+                            return `<span class="equipment-item">${eq.emoji} ${eq.name}</span>`;
                         }).join('')}
                     </div>` : ''}
                     <div class="monster-actions">
                         <button class="choice-btn btn-small" onclick="game.actions.showMonsterDetails(${index})">
-                            ${window.translation ? window.translation.t('manage') : 'Gérer'}
+                            Manage
                         </button>
                         <button class="choice-btn btn-small btn-danger" onclick="game.actions.dismissMonster(${index})" style="margin-left: 5px;">
-                            ${window.translation ? window.translation.t('dismiss') : 'Renvoyer'}
+                            Dismiss
                         </button>
                     </div>
                 </div>
@@ -170,7 +161,7 @@ class UI {
         if (!container) return;
         
         if (inventory.length === 0) {
-            const emptyMessage = window.translation ? window.translation.t('emptyInventory') : 'Inventaire vide';
+            const emptyMessage = 'Inventory is empty';
             container.innerHTML = `<p class="empty">${emptyMessage}</p>`;
             return;
         }
@@ -184,10 +175,8 @@ class UI {
             const item = equipment[itemKey];
             if (!item) return '';
             
-            // Utiliser la traduction pour le nom de l'équipement si disponible
-            const itemName = window.translation ? 
-                window.translation.getEquipmentName(itemKey, item.name) : 
-                item.name;
+            // Utiliser le nom de l'équipement directement
+            const itemName = item.name;
             
             return `
                 <div class="inventory-item">

@@ -1,58 +1,58 @@
 {
   "goblin": {
-    "name": "Gobelin",
+    "name": "Goblin",
     "emoji": "👺",
     "cost": 30,
-    "baseStats": { "force": 2, "defense": 1, "vitesse": 3, "magie": 1 },
-    "description": "Petit mais vicieux, excellent éclaireur",
-    "rarity": "commun"
+    "baseStats": { "strength": 2, "defense": 1, "speed": 3, "magic": 1 },
+    "description": "Small but vicious, excellent scout",
+    "rarity": "common"
   },
   "orc": {
     "name": "Orc",
     "emoji": "🧌",
     "cost": 80,
-    "baseStats": { "force": 4, "defense": 3, "vitesse": 2, "magie": 1 },
-    "description": "Guerrier brutal et résistant",
-    "rarity": "commun"
+    "baseStats": { "strength": 4, "defense": 3, "speed": 2, "magic": 1 },
+    "description": "Brutal and resistant warrior",
+    "rarity": "common"
+  },
+    "sorcier": {
+    "name": "Dark Sorcerer",
+    "emoji": "🧙‍♂️",
+    "cost": 400,
+    "baseStats": { "strength": 2, "defense": 2, "speed": 3, "magic": 7 },
+    "description": "Master of dark arts and curses",
+    "rarity": "rare"
   },
   "troll": {
     "name": "Troll",
     "emoji": "👹",
     "cost": 500,
-    "baseStats": { "force": 8, "defense": 6, "vitesse": 1, "magie": 0 },
-    "description": "Colosse destructeur aux poings de pierre",
-    "rarity": "rare"
-  },
-  "sorcier": {
-    "name": "Sorcier Noir",
-    "emoji": "🧙‍♂️",
-    "cost": 400,
-    "baseStats": { "force": 2, "defense": 2, "vitesse": 3, "magie": 7 },
-    "description": "Maître des arts obscurs et des malédictions",
+    "baseStats": { "strength": 8, "defense": 6, "speed": 1, "magic": 0 },
+    "description": "Destructive colossus with stone fists",
     "rarity": "rare"
   },
   "vampire": {
     "name": "Vampire",
     "emoji": "🧛‍♂️",
     "cost": 1200,
-    "baseStats": { "force": 6, "defense": 5, "vitesse": 6, "magie": 4 },
-    "description": "Noble des ténèbres, régénère en combat",
-    "rarity": "épique"
+    "baseStats": { "strength": 6, "defense": 5, "speed": 6, "magic": 4 },
+    "description": "Noble of darkness, regenerates in combat",
+    "rarity": "epic"
   },
   "demon": {
-    "name": "Démon",
+    "name": "Demon",
     "emoji": "😈",
     "cost": 1800,
-    "baseStats": { "force": 7, "defense": 4, "vitesse": 5, "magie": 6 },
-    "description": "Entité infernale d'une puissance terrifiante",
-    "rarity": "épique"
+    "baseStats": { "strength": 7, "defense": 4, "speed": 5, "magic": 6 },
+    "description": "Infernal entity of terrifying power",
+    "rarity": "epic"
   },
   "dragon": {
-    "name": "Dragon Noir",
+    "name": "Black Dragon",
     "emoji": "🐉",
     "cost": 5000,
-    "baseStats": { "force": 12, "defense": 10, "vitesse": 4, "magie": 8 },
-    "description": "Seigneur des cieux sombres, terreur absolue",
-    "rarity": "légendaire"
+    "baseStats": { "strength": 12, "defense": 10, "speed": 4, "magic": 8 },
+    "description": "Lord of dark skies, absolute terror",
+    "rarity": "legendary"
   }
 }

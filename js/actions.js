@@ -9,26 +9,24 @@ class Actions {
         const monster = this.game.monsterTypes[monsterKey];
         
         if (!monster) {
-            const message = window.translation ? `❌ ${window.translation.t('monsterNotFound')}` : '❌ Monstre introuvable !';
-            this.game.addToJournal(message);
+            this.game.addToJournal('❌ Monster not found!');
             return;
         }
         
         if (this.game.player.gold < monster.cost) {
-            const message = window.translation ? `❌ ${window.translation.t('notEnoughGold')}` : '❌ Pas assez d\'or pour recruter cette créature !';
-            this.game.addToJournal(message);
+            this.game.addToJournal('❌ Not enough gold to recruit this creature!');
             return;
         }
         
         if (this.game.player.monsters.length >= this.game.player.maxMonsters) {
-            const message = window.translation ? `❌ ${window.translation.t('barracksFull')}` : '❌ Vos casernes sont pleines !';
-            this.game.addToJournal(message);
+            this.game.addToJournal('❌ Your barracks are full!');
             return;
         }
         
         this.game.player.gold -= monster.cost;
         
         const newMonster = {
+            id: monsterKey,
             type: monsterKey,
             name: monster.name,
             emoji: monster.emoji,
@@ -40,29 +38,29 @@ class Actions {
         
         this.game.player.monsters.push(newMonster);
         
-        this.game.addToJournal(`✅ ${monster.emoji} ${monster.name} répond à votre appel et rejoint vos légions !`);
+        this.game.addToJournal(`✅ ${monster.emoji} ${monster.name} answered your call and joined your legions !`);
         this.game.updateUI();
         this.game.showScene('recruit');
     }
     
-    // Achat d'équipement
+    // Purchase equipment
     buyEquipment(equipmentKey) {
         const equipment = this.game.equipment[equipmentKey];
         
         if (!equipment) {
-            this.game.addToJournal('❌ Équipement introuvable !');
+            this.game.addToJournal('❌ Equipment not found !');
             return;
         }
         
         if (this.game.player.gold < equipment.cost) {
-            this.game.addToJournal('❌ Pas assez d\'or pour cet équipement !');
+            this.game.addToJournal('❌ Not enough gold for this equipment !');
             return;
         }
         
         this.game.player.gold -= equipment.cost;
         this.game.player.inventory.push(equipmentKey);
         
-        this.game.addToJournal(`✅ Vous achetez ${equipment.emoji} ${equipment.name} !`);
+        this.game.addToJournal(`✅ You purchase ${equipment.emoji} ${equipment.name}!`);
         this.game.updateUI();
         this.game.showScene('market');
     }
@@ -74,7 +72,7 @@ class Actions {
         const upgrade = upgrades[nextLevel];
         
         if (!upgrade || this.game.player.gold < upgrade.cost) {
-            this.game.addToJournal('❌ Pas assez d\'or pour améliorer le donjon !');
+            this.game.addToJournal('❌ Not enough gold to upgrade the dungeon !');
             return;
         }
         
@@ -82,32 +80,32 @@ class Actions {
         this.game.player.dungeonLevel = nextLevel;
         this.game.player.maxMonsters = upgrade.maxMonsters;
         this.game.player.maxEnergy = upgrade.maxEnergy;
-        this.game.player.energy = this.game.player.maxEnergy; // Restaure l'énergie lors de l'amélioration
-        
-        this.game.addToJournal(`🔨 Votre donjon évolue vers: ${upgrade.name} !`);
-        this.game.addToJournal(`✨ Nouvelles fonctionnalités: ${upgrade.newFeatures.join(', ')}`);
-        this.game.addToJournal(`⚡ Énergie maximale augmentée à ${this.game.player.maxEnergy} !`);
+        this.game.player.energy = this.game.player.maxEnergy; // Restore energy when upgrading
+
+        this.game.addToJournal(`🔨 Your dungeon evolves to: ${upgrade.name} !`);
+        this.game.addToJournal(`✨ New features: ${upgrade.newFeatures.join(', ')}`);
+        this.game.addToJournal(`⚡ Maximum energy increased to ${this.game.player.maxEnergy} !`);
         this.game.updateUI();
         this.game.showScene('hub');
     }
-    
-    // Lancement d'une mission
+
+    // Start a mission
     startMission(missionKey) {
         const mission = this.game.missions[missionKey];
         const totalPower = this.game.calculateTotalPower();
         
         if (!mission) {
-            this.game.addToJournal('❌ Mission introuvable !');
+            this.game.addToJournal('❌ Mission not found !');
             return;
         }
         
         if (this.game.player.energy < mission.energyCost) {
-            this.game.addToJournal('❌ Pas assez d\'énergie pour cette mission !');
+            this.game.addToJournal('❌ Not enough energy for this mission !');
             return;
         }
         
         if (totalPower < mission.requiredPower) {
-            this.game.addToJournal('❌ Votre armée est trop faible pour cette mission !');
+            this.game.addToJournal('❌ Your army is too weak for this mission !');
             return;
         }
         
@@ -126,11 +124,11 @@ class Actions {
     // Simulation de combat détaillée
     simulateDetailedCombat(mission) {
         const scenarios = this.game.gameConfig.combatScenarios || [
-            'Vos monstres frappent dans l\'ombre ! L\'effet de surprise est total.',
-            'Le combat fait rage pendant des heures. Vos créatures montrent leur supériorité.',
-            'Les défenseurs tentent une résistance héroïque, mais vos légions sont implacables.',
-            'Une victoire écrasante ! L\'ennemi fuit en abandonnant tout derrière lui.',
-            'Vos monstres sèment la terreur avec une efficacité terrifiante.'
+            'Your monsters strike from the shadows! The element of surprise is total.',
+            'The battle rages for hours. Your creatures show their superiority.',
+            'The defenders attempt a heroic resistance, but your legions are relentless.',
+            'A crushing victory! The enemy flees, leaving everything behind.',
+            'Your monsters sow terror with terrifying efficiency.'
         ];
         
         const casualty = Math.random() < 0.1; // 10% de chance de perdre un monstre
@@ -151,33 +149,33 @@ class Actions {
         if (mission.reward.items && Math.random() < 0.4) { // 40% de chance
             const randomItem = mission.reward.items[Math.floor(Math.random() * mission.reward.items.length)];
             this.game.player.inventory.push(randomItem);
-            this.game.addToJournal(`🎁 Vous trouvez ${this.game.equipment[randomItem].emoji} ${this.game.equipment[randomItem].name} !`);
+            this.game.addToJournal(`🎁 You find ${this.game.equipment[randomItem].emoji} ${this.game.equipment[randomItem].name}!`);
         }
         
         let resultText = `
-            <h2>⚔️ Rapport de Mission</h2>
+            <h2>⚔️ Missions report </h2>
             <p><strong>${mission.name}</strong></p>
             <p>${result.description}</p>
         `;
         
         if (result.casualty && this.game.player.monsters.length > 0) {
             const lostMonster = this.game.player.monsters.splice(Math.floor(Math.random() * this.game.player.monsters.length), 1)[0];
-            resultText += `<p class="error">💀 ${lostMonster.emoji} ${lostMonster.name} est tombé au combat !</p>`;
-            this.game.addToJournal(`💀 ${lostMonster.name} est mort en héros des ténèbres...`);
+            resultText += `<p class="error">💀 ${lostMonster.emoji} ${lostMonster.name} was lost in battle!</p>`;
+            this.game.addToJournal(`💀 ${lostMonster.name} died a hero of the shadows...`);
         }
         
         resultText += `
             <p class="success">
-                🎉 VICTOIRE TOTALE ! Vous gagnez ${mission.reward.gold} or et ${mission.reward.reputation} points de réputation !
+                🎉 TOTAL VICTORY! You gain ${mission.reward.gold} gold and ${mission.reward.reputation} reputation points!
             </p>
         `;
         
         this.game.ui.displayScene(resultText, [
-            { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') },
-            { text: '⚔️ Choisir une nouvelle mission', action: () => this.game.showScene('missions') }
+            { text: '🏰 Return to dungeon', action: () => this.game.showScene('hub') },
+            { text: '⚔️ Choose a new mission', action: () => this.game.showScene('missions') }
         ]);
         
-        this.game.addToJournal(`🎉 Mission accomplie : +${mission.reward.gold} or, +${mission.reward.reputation} réputation`);
+        this.game.addToJournal(`🎉 Mission accomplished: +${mission.reward.gold} gold, +${mission.reward.reputation} reputation`);
         this.game.updateUI();
     }
     
@@ -189,7 +187,7 @@ class Actions {
         if (monster.experience >= expNeeded) {
             monster.level++;
             monster.experience = 0;
-            const message = window.translation ? `⭐ ${monster.emoji} ${monster.name} ${window.translation.t('levelUp')} ${monster.level} !` : `⭐ ${monster.emoji} ${monster.name} monte au niveau ${monster.level} !`;
+            const message = `⭐ ${monster.emoji} ${monster.name} reaches level ${monster.level}!`;
             this.game.addToJournal(message);
         }
     }
@@ -197,7 +195,7 @@ class Actions {
     // Actions d'exploration
     exploreRuins() {
         if (this.game.player.energy < 1) {
-            this.game.addToJournal('❌ Vous êtes trop fatigué pour explorer !');
+            this.game.addToJournal('❌ You are too tired to explore!');
             this.game.showScene('hub');
             return;
         }
@@ -211,12 +209,12 @@ class Actions {
         if (discovery.reputation) this.game.player.reputation += discovery.reputation;
         
         this.game.ui.displayScene(`
-            <h2>🔍 ${window.translation ? window.translation.t('ruinsExploration') : 'Exploration des Ruines'}</h2>
-            <p>${window.translation ? window.translation.t('ruinsDesc') : 'Vous fouillez minutieusement les décombres de civilisations oubliées...'}</p>
+            <h2>🔍 Explore Ruins</h2>
+            <p>You carefully search through the debris of forgotten civilizations...</p>
             <p class="success">${discovery.text}</p>
         `, [
-            { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-            { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
+            { text: `🌙 Continue Exploration`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+            { text: `🏰 Return to Dungeon`, action: () => this.game.showScene('hub') }
         ]);
         
         this.game.addToJournal(`🔍 ${discovery.text}`);
@@ -225,7 +223,7 @@ class Actions {
     
     followWhispers() {
         if (this.game.player.energy < 1) {
-            this.game.addToJournal('❌ Vous êtes trop fatigué pour suivre les murmures !');
+            this.game.addToJournal('❌ You are too tired to follow the whispers!');
             this.game.showScene('hub');
             return;
         }
@@ -242,12 +240,12 @@ class Actions {
             if (whisper.reputation) this.game.player.reputation += whisper.reputation;
             
             this.game.ui.displayScene(`
-                <h2>👻 ${window.translation ? window.translation.t('spectralWhispers') : 'Murmures Spectraux'}</h2>
-                <p>${window.translation ? window.translation.t('spectralDesc') : 'Vous suivez les voix venues d\'outre-tombe à travers les couloirs hantés...'}</p>
+                <h2>👻 Spectral Whispers</h2>
+                <p>You follow the voices from beyond the grave through the haunted corridors...</p>
                 <p class="warning">${whisper.text}</p>
             `, [
-                { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-                { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
+                { text: `🌙 Continue Exploration`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+                { text: `🏰 Return to Dungeon`, action: () => this.game.showScene('hub') }
             ]);
             
             this.game.addToJournal(`👻 ${whisper.text}`);
@@ -257,7 +255,7 @@ class Actions {
     
     exploreDeeper() {
         if (this.game.player.energy < 1) {
-            this.game.addToJournal('❌ Vous êtes trop fatigué pour descendre plus profondément !');
+            this.game.addToJournal('❌ You are too tired to descend deeper!');
             this.game.showScene('hub');
             return;
         }
@@ -275,12 +273,12 @@ class Actions {
             if (finding.reputation) this.game.player.reputation += finding.reputation;
             
             this.game.ui.displayScene(`
-                <h2>🕳️ ${window.translation ? window.translation.t('deepAbyss') : 'Abysses Profonds'}</h2>
-                <p>${window.translation ? window.translation.t('abyssDesc') : 'Vous descendez dans les entrailles de la terre, là où la lumière n\'a jamais brillé...'}</p>
+                <h2>🕳️ Deep Abyss</h2>
+                <p>You descend into the bowels of the earth, where light has never shone...</p>
                 <p class="warning">${finding.text}</p>
             `, [
-                { text: `🌙 ${window.translation ? window.translation.t('continueExploration') : 'Continuer l\'exploration'}`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
-                { text: `🏰 ${window.translation ? window.translation.t('returnToDungeon') : 'Retourner au donjon'}`, action: () => this.game.showScene('hub') }
+                { text: `🌙 Continue Exploration`, action: () => this.game.showScene('explore'), disabled: this.game.player.energy === 0 },
+                { text: `🏰 Return to Dungeon`, action: () => this.game.showScene('hub') }
             ]);
             
             this.game.addToJournal(`🕳️ ${finding.text}`);
@@ -296,12 +294,12 @@ class Actions {
         
         if (this.game.player.monsters.length >= this.game.player.maxMonsters) {
             this.game.ui.displayScene(`
-                <h2>🐺 Rencontre Sauvage</h2>
-                <p>${window.translation ? `${window.translation.t('youComeAcross')} ${monster.emoji} ${monster.name} ${window.translation.t('wild')}, ${window.translation.t('barracksFullWild')}` : `Vous tombez sur ${monster.emoji} ${monster.name} sauvage, mais vos casernes sont pleines !`}</p>
-                <p class="error">La créature s'enfuit dans les ténèbres...</p>
+                <h2>🐺 Wild Encounter</h2>
+                <p>You come across ${monster.emoji} ${monster.name} wild, but your barracks are full!</p>
+                <p class="error">The creature flees into the darkness...</p>
             `, [
-                { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore') },
-                { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') }
+                { text: '🌙 Continue Exploration', action: () => this.game.showScene('explore') },
+                { text: '🏰 Return to Dungeon', action: () => this.game.showScene('hub') }
             ]);
             return;
         }
@@ -319,22 +317,22 @@ class Actions {
         this.game.player.monsters.push(newMonster);
         
         this.game.ui.displayScene(`
-            <h2>🐺 Rencontre Sauvage</h2>
-            <p>${window.translation ? `${window.translation.t('inTheDepths')} ${monster.emoji} ${monster.name} ${window.translation.t('solitary')} !` : `Dans les profondeurs, vous tombez sur ${monster.emoji} ${monster.name} solitaire !`}</p>
-            <p class="success">La créature reconnaît votre autorité et rejoint vos rangs gratuitement !</p>
+            <h2>🐺 Wild Encounter</h2>
+            <p>In the depths, you come across ${monster.emoji} ${monster.name} solitary!</p>
+            <p class="success">The creature recognizes your authority and joins your ranks for free!</p>
         `, [
-            { text: '🌙 Continuer l\'exploration', action: () => this.game.showScene('explore') },
-            { text: '🏰 Retourner au donjon', action: () => this.game.showScene('hub') }
+            { text: '🌙 Continue Exploration', action: () => this.game.showScene('explore') },
+            { text: '🏰 Return to Dungeon', action: () => this.game.showScene('hub') }
         ]);
         
-        this.game.addToJournal(`🐺 ${monster.emoji} ${monster.name} sauvage rejoint vos légions !`);
+        this.game.addToJournal(`🐺 ${monster.emoji} ${monster.name} wild join your legion !`);
         this.game.updateUI();
     }
     
     // Méditation
     meditate() {
         if (this.game.player.energy < 1) {
-            this.game.addToJournal('❌ Vous êtes trop fatigué pour méditer !');
+            this.game.addToJournal('❌ You are too tired to meditate!');
             this.game.showScene('hub');
             return;
         }
@@ -351,14 +349,14 @@ class Actions {
         const meditation = meditations[Math.floor(Math.random() * meditations.length)];
         
         this.game.ui.displayScene(`
-            <h2>🔮 ${window.translation ? window.translation.t('meditationTitle') : 'Méditation des Ombres'}</h2>
+            <h2>🔮 Shadow Meditation</h2>
             <p>${meditation}</p>
-            <p class="success">${window.translation ? window.translation.t('spiritSharpens') : 'Votre esprit s\'aiguise.'} ${window.translation ? `+${goldGained} ${window.translation.t('gold')}, +${repGained} ${window.translation.t('reputation').replace(':', '')}.` : `+${goldGained} or, +${repGained} réputation.`}</p>
+            <p class="success">Your mind sharpens. +${goldGained} gold, +${repGained} reputation.</p>
         `, [
-            { text: `🏰 ${window.translation ? window.translation.t('returnToHall') : 'Retourner au Hall Principal'}`, action: () => this.game.showScene('hub') }
+            { text: `🏰 Return to Main Hall`, action: () => this.game.showScene('hub') }
         ]);
         
-        this.game.addToJournal(`🔮 Méditation accomplie : +${goldGained} or, +${repGained} réputation`);
+        this.game.addToJournal(`🔮 MMeditation completed: +${goldGained} or, +${repGained} reputation`);
         this.game.updateUI();
     }
     
@@ -377,7 +375,7 @@ class Actions {
         let equipmentOptions = '';
         if (availableItems.length > 0) {
             equipmentOptions = `
-                <h4>Équiper des objets :</h4>
+                <h4>Equip object :</h4>
                 <div style="display: grid; gap: 8px;">
                     ${availableItems.map(itemKey => {
                         const item = this.game.equipment[itemKey];
@@ -392,31 +390,31 @@ class Actions {
         }
         
         this.game.ui.displayScene(`
-            <h2>👹 Gestion de ${monster.emoji} ${monster.name}</h2>
+            <h2>👹 Manage ${monster.emoji} ${monster.name}</h2>
             <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <p><strong>${window.translation ? window.translation.t('level') : 'Niveau'} :</strong> ${monster.level} (${window.translation ? window.translation.t('exp') : 'EXP'}: ${monster.experience}/${monster.level * 100})</p>
+                <p><strong>Level:</strong> ${monster.level} (EXP: ${monster.experience}/${monster.level * 100})</p>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0;">
-                    <div><strong>⚔️ Force:</strong> ${stats.force}</div>
-                    <div><strong>🛡️ Défense:</strong> ${stats.defense}</div>
-                    <div><strong>⚡ Vitesse:</strong> ${stats.vitesse}</div>
-                    <div><strong>🔮 Magie:</strong> ${stats.magie}</div>
+                    <div><strong>⚔️ Strength:</strong> ${stats.strength}</div>
+                    <div><strong>🛡️ Defense:</strong> ${stats.defense}</div>
+                    <div><strong>⚡ Speed:</strong> ${stats.speed}</div>
+                    <div><strong>🔮 Magic:</strong> ${stats.magic}</div>
                 </div>
                 
-                <h4>Équipement actuel :</h4>
+                <h4>Current Equipment:</h4>
                 <div style="display: grid; gap: 4px; font-size: 0.9em;">
-                    ${Object.entries(monster.equipment).map(([slot, item]) => 
-                        `<div>${slot}: ${item ? `${item.emoji} ${item.name}` : 'Aucun'}</div>`
+                    ${Object.entries(monster.equipment).map(([slot, item]) =>
+                        `<div>${slot}: ${item ? `${item.emoji} ${item.name}` : 'None'}</div>`
                     ).join('')}
                 </div>
                 
                 ${equipmentOptions}
             </div>
         `, [
-            { text: '🏰 Retourner au Hall Principal', action: () => this.game.showScene('hub') }
+            { text: '🏰 Return to Main Hall', action: () => this.game.showScene('hub') }
         ]);
     }
-    
-    // Équiper un objet sur un monstre
+
+    // Equip an item on a monster
     equipItem(monsterIndex, itemKey) {
         const monster = this.game.player.monsters[monsterIndex];
         const item = this.game.equipment[itemKey];
@@ -442,29 +440,27 @@ class Actions {
         // Équiper le nouvel objet
         monster.equipment[item.slot] = item;
         
-        this.game.addToJournal(`✅ ${monster.name} équipe ${item.emoji} ${item.name} !`);
+        this.game.addToJournal(`✅ ${monster.name} equips ${item.emoji} ${item.name} !`);
         this.game.updateUI();
         this.showMonsterDetails(monsterIndex);
     }
     
-    // Renvoi d'un monstre
+    // Dismiss a monster
     dismissMonster(monsterIndex) {
         if (monsterIndex < 0 || monsterIndex >= this.game.player.monsters.length) {
-            const message = window.translation ? `❌ ${window.translation.t('monsterNotFound')}` : '❌ Monstre introuvable !';
+            const message = '❌ Monster not found!';
             this.game.addToJournal(message);
             return;
         }
         
         const monster = this.game.player.monsters[monsterIndex];
-        const confirmMessage = window.translation ? window.translation.t('confirmDismiss') : 'Êtes-vous sûr de vouloir renvoyer ce monstre ? Cette action est irréversible.';
+        const confirmMessage = 'Are you sure you want to dismiss this monster? This action is irreversible.';
         
         if (confirm(confirmMessage)) {
-            // Retirer le monstre de la liste
+            // Remove the monster from the list
             this.game.player.monsters.splice(monsterIndex, 1);
             
-            const dismissedMessage = window.translation ? 
-                `🚪 ${monster.emoji} ${monster.name} ${window.translation.t('monsterDismissed')}` : 
-                `🚪 ${monster.emoji} ${monster.name} a été renvoyé des légions`;
+            const dismissedMessage = `🚪 ${monster.emoji} ${monster.name} has been dismissed from the legions`;
             
             this.game.addToJournal(dismissedMessage);
             this.game.updateUI();
@@ -477,7 +473,7 @@ class Actions {
         const event = events[Math.floor(Math.random() * events.length)];
         
         this.game.ui.displayScene(`
-            <h2>🎲 Événement Mystérieux</h2>
+            <h2>🎲 Mysterious event</h2>
             <p>${event.text}</p>
         `, event.choices.map(choice => ({
             text: choice.text,
@@ -494,11 +490,11 @@ class Actions {
         switch(choice.action) {
             case 'addGold':
                 this.game.player.gold += choice.value;
-                this.game.addToJournal(`💰 Vous gagnez ${choice.value} pièces d'or !`);
+                this.game.addToJournal(`💰 You gain ${choice.value} gold pieces!`);
                 break;
             case 'addReputation':
                 this.game.player.reputation += choice.value;
-                this.game.addToJournal(`⭐ Votre réputation augmente de ${choice.value} points !`);
+                this.game.addToJournal(`⭐ Your reputation increases by ${choice.value} points!`);
                 break;
             case 'defendDungeon':
                 this.defendDungeon();
@@ -524,14 +520,14 @@ class Actions {
             const repGained = 15 + Math.floor(Math.random() * 10);
             this.game.player.gold += goldGained;
             this.game.player.reputation += repGained;
-            this.game.addToJournal(`🛡️ Vous repoussez les aventuriers ! +${goldGained} or, +${repGained} réputation`);
+            this.game.addToJournal(`🛡️ You repel the adventurers! +${goldGained} gold, +${repGained} reputation`);
         } else {
             if (this.game.player.monsters.length > 0) {
                 const lostMonster = this.game.player.monsters.splice(Math.floor(Math.random() * this.game.player.monsters.length), 1)[0];
-                this.game.addToJournal(`💀 ${lostMonster.name} tombe face aux héros...`);
+                this.game.addToJournal(`💀 ${lostMonster.name} falls before the heroes...`);
             } else {
                 this.game.player.gold = Math.max(0, this.game.player.gold - 50);
-                this.game.addToJournal(`💸 Les aventuriers pillent votre trésor ! -50 or`);
+                this.game.addToJournal(`💸 The adventurers loot your treasure! -50 gold`);
             }
         }
     }
@@ -540,9 +536,9 @@ class Actions {
         const goldCost = 75;
         if (this.game.player.gold >= goldCost) {
             this.game.player.gold -= goldCost;
-            this.game.addToJournal(`💰 Vous corrompez les aventuriers pour ${goldCost} or.`);
+            this.game.addToJournal(`💰 You corrupt the adventurers for ${goldCost} gold.`);
         } else {
-            this.game.addToJournal(`❌ Pas assez d'or pour les corrompre ! Ils attaquent !`);
+            this.game.addToJournal(`❌ Not enough gold to corrupt them! They attack!`);
             this.defendDungeon();
         }
     }
@@ -552,24 +548,24 @@ class Actions {
         if (this.game.player.gold >= cost) {
             this.game.player.gold -= cost;
             this.game.player.reputation += 25;
-            this.game.addToJournal(`👹 Pacte démoniaque conclu ! -${cost} or, +25 réputation`);
-            
+            this.game.addToJournal(`👹 Demonic pact concluded! -${cost} gold, +25 reputation`);
+
             // Chance d'obtenir un monstre démoniaque
             if (Math.random() < 0.3 && this.game.player.monsters.length < this.game.player.maxMonsters) {
                 const demonMonster = {
                     type: 'demon',
-                    name: 'Démon',
+                    name: 'Demon',
                     emoji: '😈',
-                    baseStats: { force: 7, defense: 4, vitesse: 5, magie: 6 },
+                    baseStats: { strength: 7, defense: 4, speed: 5, magic: 6 },
                     level: 1,
                     experience: 0,
                     equipment: { weapon: null, armor: null, boots: null, accessory: null }
                 };
                 this.game.player.monsters.push(demonMonster);
-                this.game.addToJournal(`👹 Un démon apparaît et se joint à vous !`);
+                this.game.addToJournal(`👹 A demon appears and joins you!`);
             }
         } else {
-            this.game.addToJournal(`❌ Le démon refuse, vous n'avez pas assez d'or...`);
+            this.game.addToJournal(`❌ The demon refuses, you don't have enough gold...`);
         }
     }
     
