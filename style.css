@@ -239,6 +239,23 @@ body {
     transform: none;
 }
 
+/* Bouton danger pour renvoyer les monstres */
+.btn-danger {
+    background: linear-gradient(135deg, #c0392b, #e74c3c) !important;
+    border-color: #c0392b !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #a93226, #d32f2f) !important;
+    border-color: #a93226 !important;
+}
+
+.btn-small {
+    padding: 6px 12px !important;
+    font-size: 0.8em !important;
+    margin-top: 0 !important;
+}
+
 /* Side Panels */
 .side-panels {
     display: flex;

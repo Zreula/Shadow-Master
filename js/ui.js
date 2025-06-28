@@ -133,6 +133,9 @@ class UI {
                         <button class="choice-btn btn-small" onclick="game.actions.showMonsterDetails(${index})">
                             ${window.translation ? window.translation.t('manage') : 'Gérer'}
                         </button>
+                        <button class="choice-btn btn-small btn-danger" onclick="game.actions.dismissMonster(${index})" style="margin-left: 5px;">
+                            ${window.translation ? window.translation.t('dismiss') : 'Renvoyer'}
+                        </button>
                     </div>
                 </div>
             `;

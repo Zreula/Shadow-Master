@@ -447,6 +447,30 @@ class Actions {
         this.showMonsterDetails(monsterIndex);
     }
     
+    // Renvoi d'un monstre
+    dismissMonster(monsterIndex) {
+        if (monsterIndex < 0 || monsterIndex >= this.game.player.monsters.length) {
+            const message = window.translation ? `❌ ${window.translation.t('monsterNotFound')}` : '❌ Monstre introuvable !';
+            this.game.addToJournal(message);
+            return;
+        }
+        
+        const monster = this.game.player.monsters[monsterIndex];
+        const confirmMessage = window.translation ? window.translation.t('confirmDismiss') : 'Êtes-vous sûr de vouloir renvoyer ce monstre ? Cette action est irréversible.';
+        
+        if (confirm(confirmMessage)) {
+            // Retirer le monstre de la liste
+            this.game.player.monsters.splice(monsterIndex, 1);
+            
+            const dismissedMessage = window.translation ? 
+                `🚪 ${monster.emoji} ${monster.name} ${window.translation.t('monsterDismissed')}` : 
+                `🚪 ${monster.emoji} ${monster.name} a été renvoyé des légions`;
+            
+            this.game.addToJournal(dismissedMessage);
+            this.game.updateUI();
+        }
+    }
+    
     // Événements aléatoires
     triggerRandomEvent() {
         const events = this.game.dataManager.getRandomEvents();

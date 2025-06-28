@@ -218,6 +218,292 @@ class Translation {
                     pendant: { name: "Pendentif de Protection" },
                     darkPendant: { name: "Pendentif des Ombres" },
                     soulPendant: { name: "Pendentif d'Âme" }
+                },
+                
+                // Gestion des monstres
+                dismissMonster: "Renvoyer",
+                confirmDismiss: "Êtes-vous sûr de vouloir renvoyer ce monstre ? Cette action est irréversible.",
+                monsterDismissed: "a été renvoyé des légions",
+                dismiss: "Renvoyer",
+                
+                // Niveaux et progression
+                level: "Niveau",
+                currentLevel: "Niveau actuel :",
+                fortress: "Forteresse :",
+                newFeaturesUnlocked: "Nouvelles fonctionnalités débloquées grâce à votre donjon niveau",
+                maxLevelReached: "Félicitations ! Votre donjon a atteint son niveau maximum !",
+                levelUp: "monte au niveau",
+                exp: "EXP:",
+                
+                // Temps et énergie
+                timeOfDay: {
+                    morning: "Aube Sanglante",
+                    day: "Jour Sombre", 
+                    evening: "Crépuscule",
+                    night: "Nuit Éternelle"
+                },
+                
+                // Textes d'exploration
+                youComeAcross: "Vous tombez sur",
+                wild: "sauvage",
+                inTheDepths: "Dans les profondeurs, vous tombez sur",
+                solitary: "solitaire",
+                
+                // Exploration des Ténèbres
+                explorationTitle: "Exploration des Ténèbres",
+                explorationDesc: "Votre donjon recèle encore de nombreux mystères. Des couloirs oubliés, des chambres secrètes et des passages interdits attendent votre exploration.",
+                explorationSubDesc: "Chaque expédition dans les profondeurs peut révéler des trésors, des connaissances anciennes, ou des rencontres inattendues...",
+                energyAvailable: "Énergie disponible :",
+                explorationPoints: "Points d'exploration :",
+                
+                // Actions d'exploration
+                searchRuins: "Fouiller les ruines anciennes",
+                followWhispers: "Suivre les murmures spectraux", 
+                descendDeeper: "Descendre plus profondément",
+                returnToHall: "Retourner au Hall Principal",
+                continueExploration: "Continuer l'exploration",
+                returnToDungeon: "Retourner au donjon",
+                
+                // Résultats d'exploration
+                ruinsExploration: "Exploration des Ruines",
+                ruinsDesc: "Vous fouillez minutieusement les décombres de civilisations oubliées...",
+                ancientTreasure: "Vous découvrez un coffre rempli d'or ancien !",
+                
+                spectralWhispers: "Murmures Spectraux", 
+                spectralDesc: "Vous suivez les voix venues d'outre-tombe à travers les couloirs hantés...",
+                silenceDesc: "les voix se taisent, vous laissant dans le silence...",
+                
+                deepAbyss: "Abysses Profonds",
+                abyssDesc: "Vous descendez dans les entrailles de la terre, là où la lumière n'a jamais brillé...",
+                blackVein: "Vous découvrez une veine d'or noir...",
+                
+                // Méditation
+                meditationTitle: "Méditation des Ombres",
+                meditationDesc: "Votre connexion avec les forces obscures se renforce...",
+                spiritSharpens: "Votre esprit s'aiguise.",
+                goldReward: "+24 or, +4 réputation.",
+                
+                // Repos et nouveau jour
+                newDay: "Nouveau Jour",
+                restfulWakeup: "Vous vous réveillez après un repos réparateur dans les ténèbres de votre donjon.",
+                dayBegins: "commence ! Votre énergie est restaurée",
+                shadowsWhisper: "Les ombres vous murmurent que de nouveaux défis vous attendent...",
+                startDay: "Commencer la journée",
+                restComplete: "Repos terminé, énergie restaurée !",
+                
+                // Scène de démarrage
+                darknessAwakening: "L'Éveil des Ténèbres",
+                startSceneIntro: "Les brumes matinales se dissipent, révélant votre nouveau domaine. Cette forteresse oubliée, nichée dans les montagnes maudites, sera le berceau de votre empire des ombres.",
+                startSceneDescription: "Les murs suintent d'une magie ancienne, et l'air vibre de promesses de pouvoir. Votre destin vous attend dans les profondeurs...",
+                firstMission: "Votre première mission : établir votre domination sur ces terres abandonnées par les dieux.",
+                prepareForUnknown: "Préparez-vous à plonger dans l'inconnu...",
+                enterDungeon: "Entrer dans le donjon",
+                
+                // Hall des Ombres
+                hallTitle: "Hall des Ombres Éternelles",
+                hallDesc: "Vous dominez votre domaine depuis votre trône d'obsidienne. Les torches noires projettent des ombres dansantes sur les murs gravés de runes anciennes.",
+                treasure: "Trésor :",
+                terror: "Terreur :",
+                goldPieces: "pièces d'or",
+                points: "points",
+                creatures: "créatures",
+                
+                // Événements aléatoires
+                travelerEvent: "Un voyageur perdu offre de l'or contre sa liberté...",
+                acceptGold: "Accepter l'or (+50 or)",
+                devour: "Le dévorer (+5 réputation)",
+                adventurersEvent: "Des aventuriers tentent d'infiltrer votre donjon !",
+                fight: "Les combattre",
+                negotiate: "Négocier",
+                demonEvent: "Un démon propose un pacte mystérieux...",
+                acceptPact: "Accepter le pacte",
+                
+                // Noms de dongeons
+                catacombs: "Catacombes",
+                deepCrypt: "Crypte Profonde",
+                shadowCitadel: "Citadelle des Ombres",
+                cursedFortress: "Forteresse Maudite",
+                
+                // Fonctionnalités
+                blackMarket: "Marché Noir",
+                alchemyLab: "Laboratoire Alchimique",
+                combatArena: "Arène de Combat",
+                demonPortal: "Portail Démoniaque",
+                
+                // Monstres
+                monsters: {
+                    goblin: { name: "Gobelin", description: "Petit mais vicieux, excellent éclaireur" },
+                    orc: { name: "Orc", description: "Guerrier brutal et résistant" },
+                    troll: { name: "Troll", description: "Colosse destructeur aux poings de pierre" },
+                    sorcier: { name: "Sorcier Noir", description: "Maître des arts obscurs et des malédictions" },
+                    vampire: { name: "Vampire", description: "Noble des ténèbres assoiffé de sang" },
+                    demon: { name: "Démon", description: "Créature des abysses aux pouvoirs terrifiants" }
+                },
+                
+                // Équipement
+                equipment: {
+                    sword: { name: "Épée Rouillée" },
+                    darkSword: { name: "Lame des Ombres" },
+                    cursedBlade: { name: "Lame Maudite" },
+                    shield: { name: "Bouclier de Fer" },
+                    darkShield: { name: "Bouclier des Ombres" },
+                    soulShield: { name: "Bouclier d'Âmes" },
+                    leather: { name: "Armure de Cuir" },
+                    chainmail: { name: "Cotte de Mailles" },
+                    plate: { name: "Armure de Plaques" },
+                    darkPlate: { name: "Armure des Ténèbres" },
+                    boots: { name: "Bottes de Marche" },
+                    shadowBoots: { name: "Bottes de l'Ombre" },
+                    windBoots: { name: "Bottes du Vent" },
+                    ring: { name: "Anneau de Force" },
+                    manaRing: { name: "Anneau de Mana" },
+                    cursedRing: { name: "Anneau Maudit" },
+                    pendant: { name: "Pendentif de Protection" },
+                    darkPendant: { name: "Pendentif des Ombres" },
+                    soulPendant: { name: "Pendentif d'Âme" }
+                },
+                
+                // Gestion des monstres
+                dismissMonster: "Renvoyer",
+                confirmDismiss: "Êtes-vous sûr de vouloir renvoyer ce monstre ? Cette action est irréversible.",
+                monsterDismissed: "a été renvoyé des légions",
+                dismiss: "Renvoyer",
+                
+                // Niveaux et progression
+                level: "Niveau",
+                currentLevel: "Niveau actuel :",
+                fortress: "Forteresse :",
+                newFeaturesUnlocked: "Nouvelles fonctionnalités débloquées grâce à votre donjon niveau",
+                maxLevelReached: "Félicitations ! Votre donjon a atteint son niveau maximum !",
+                levelUp: "monte au niveau",
+                exp: "EXP:",
+                
+                // Temps et énergie
+                timeOfDay: {
+                    morning: "Aube Sanglante",
+                    day: "Jour Sombre", 
+                    evening: "Crépuscule",
+                    night: "Nuit Éternelle"
+                },
+                
+                // Textes d'exploration
+                youComeAcross: "Vous tombez sur",
+                wild: "sauvage",
+                inTheDepths: "Dans les profondeurs, vous tombez sur",
+                solitary: "solitaire",
+                
+                // Exploration des Ténèbres
+                explorationTitle: "Exploration des Ténèbres",
+                explorationDesc: "Votre donjon recèle encore de nombreux mystères. Des couloirs oubliés, des chambres secrètes et des passages interdits attendent votre exploration.",
+                explorationSubDesc: "Chaque expédition dans les profondeurs peut révéler des trésors, des connaissances anciennes, ou des rencontres inattendues...",
+                energyAvailable: "Énergie disponible :",
+                explorationPoints: "Points d'exploration :",
+                
+                // Actions d'exploration
+                searchRuins: "Fouiller les ruines anciennes",
+                followWhispers: "Suivre les murmures spectraux", 
+                descendDeeper: "Descendre plus profondément",
+                returnToHall: "Retourner au Hall Principal",
+                continueExploration: "Continuer l'exploration",
+                returnToDungeon: "Retourner au donjon",
+                
+                // Résultats d'exploration
+                ruinsExploration: "Exploration des Ruines",
+                ruinsDesc: "Vous fouillez minutieusement les décombres de civilisations oubliées...",
+                ancientTreasure: "Vous découvrez un coffre rempli d'or ancien !",
+                
+                spectralWhispers: "Murmures Spectraux", 
+                spectralDesc: "Vous suivez les voix venues d'outre-tombe à travers les couloirs hantés...",
+                silenceDesc: "les voix se taisent, vous laissant dans le silence...",
+                
+                deepAbyss: "Abysses Profonds",
+                abyssDesc: "Vous descendez dans les entrailles de la terre, là où la lumière n'a jamais brillé...",
+                blackVein: "Vous découvrez une veine d'or noir...",
+                
+                // Méditation
+                meditationTitle: "Méditation des Ombres",
+                meditationDesc: "Votre connexion avec les forces obscures se renforce...",
+                spiritSharpens: "Votre esprit s'aiguise.",
+                goldReward: "+24 or, +4 réputation.",
+                
+                // Repos et nouveau jour
+                newDay: "Nouveau Jour",
+                restfulWakeup: "Vous vous réveillez après un repos réparateur dans les ténèbres de votre donjon.",
+                dayBegins: "commence ! Votre énergie est restaurée",
+                shadowsWhisper: "Les ombres vous murmurent que de nouveaux défis vous attendent...",
+                startDay: "Commencer la journée",
+                restComplete: "Repos terminé, énergie restaurée !",
+                
+                // Scène de démarrage
+                darknessAwakening: "L'Éveil des Ténèbres",
+                startSceneIntro: "Les brumes matinales se dissipent, révélant votre nouveau domaine. Cette forteresse oubliée, nichée dans les montagnes maudites, sera le berceau de votre empire des ombres.",
+                startSceneDescription: "Les murs suintent d'une magie ancienne, et l'air vibre de promesses de pouvoir. Votre destin vous attend dans les profondeurs...",
+                firstMission: "Votre première mission : établir votre domination sur ces terres abandonnées par les dieux.",
+                prepareForUnknown: "Préparez-vous à plonger dans l'inconnu...",
+                enterDungeon: "Entrer dans le donjon",
+                
+                // Hall des Ombres
+                hallTitle: "Hall des Ombres Éternelles",
+                hallDesc: "Vous dominez votre domaine depuis votre trône d'obsidienne. Les torches noires projettent des ombres dansantes sur les murs gravés de runes anciennes.",
+                treasure: "Trésor :",
+                terror: "Terreur :",
+                goldPieces: "pièces d'or",
+                points: "points",
+                creatures: "créatures",
+                
+                // Événements aléatoires
+                travelerEvent: "Un voyageur perdu offre de l'or contre sa liberté...",
+                acceptGold: "Accepter l'or (+50 or)",
+                devour: "Le dévorer (+5 réputation)",
+                adventurersEvent: "Des aventuriers tentent d'infiltrer votre donjon !",
+                fight: "Les combattre",
+                negotiate: "Négocier",
+                demonEvent: "Un démon propose un pacte mystérieux...",
+                acceptPact: "Accepter le pacte",
+                
+                // Noms de dongeons
+                catacombs: "Catacombes",
+                deepCrypt: "Crypte Profonde",
+                shadowCitadel: "Citadelle des Ombres",
+                cursedFortress: "Forteresse Maudite",
+                
+                // Fonctionnalités
+                blackMarket: "Marché Noir",
+                alchemyLab: "Laboratoire Alchimique",
+                combatArena: "Arène de Combat",
+                demonPortal: "Portail Démoniaque",
+                
+                // Monstres
+                monsters: {
+                    goblin: { name: "Gobelin", description: "Petit mais vicieux, excellent éclaireur" },
+                    orc: { name: "Orc", description: "Guerrier brutal et résistant" },
+                    troll: { name: "Troll", description: "Colosse destructeur aux poings de pierre" },
+                    sorcier: { name: "Sorcier Noir", description: "Maître des arts obscurs et des malédictions" },
+                    vampire: { name: "Vampire", description: "Noble des ténèbres assoiffé de sang" },
+                    demon: { name: "Démon", description: "Créature des abysses aux pouvoirs terrifiants" }
+                },
+                
+                // Équipement
+                equipment: {
+                    sword: { name: "Épée Rouillée" },
+                    darkSword: { name: "Lame des Ombres" },
+                    cursedBlade: { name: "Lame Maudite" },
+                    shield: { name: "Bouclier de Fer" },
+                    darkShield: { name: "Bouclier des Ombres" },
+                    soulShield: { name: "Bouclier d'Âmes" },
+                    leather: { name: "Armure de Cuir" },
+                    chainmail: { name: "Cotte de Mailles" },
+                    plate: { name: "Armure de Plaques" },
+                    darkPlate: { name: "Armure des Ténèbres" },
+                    boots: { name: "Bottes de Marche" },
+                    shadowBoots: { name: "Bottes de l'Ombre" },
+                    windBoots: { name: "Bottes du Vent" },
+                    ring: { name: "Anneau de Force" },
+                    manaRing: { name: "Anneau de Mana" },
+                    cursedRing: { name: "Anneau Maudit" },
+                    pendant: { name: "Pendentif de Protection" },
+                    darkPendant: { name: "Pendentif des Ombres" },
+                    soulPendant: { name: "Pendentif d'Âme" }
                 }
             },
             en: {
@@ -435,6 +721,149 @@ class Translation {
                     pendant: { name: "Pendant of Protection" },
                     darkPendant: { name: "Shadow Pendant" },
                     soulPendant: { name: "Soul Pendant" }
+                },
+                
+                // Gestion des monstres
+                dismissMonster: "Dismiss",
+                confirmDismiss: "Are you sure you want to dismiss this monster? This action is irreversible.",
+                monsterDismissed: "has been dismissed from the legions",
+                dismiss: "Dismiss",
+                
+                // Niveaux et progression
+                level: "Niveau",
+                currentLevel: "Niveau actuel :",
+                fortress: "Forteresse :",
+                newFeaturesUnlocked: "Nouvelles fonctionnalités débloquées grâce à votre donjon niveau",
+                maxLevelReached: "Félicitations ! Votre donjon a atteint son niveau maximum !",
+                levelUp: "monte au niveau",
+                exp: "EXP:",
+                
+                // Temps et énergie
+                timeOfDay: {
+                    morning: "Aube Sanglante",
+                    day: "Jour Sombre", 
+                    evening: "Crépuscule",
+                    night: "Nuit Éternelle"
+                },
+                
+                // Textes d'exploration
+                youComeAcross: "Vous tombez sur",
+                wild: "sauvage",
+                inTheDepths: "Dans les profondeurs, vous tombez sur",
+                solitary: "solitaire",
+                
+                // Exploration des Ténèbres
+                explorationTitle: "Exploration des Ténèbres",
+                explorationDesc: "Votre donjon recèle encore de nombreux mystères. Des couloirs oubliés, des chambres secrètes et des passages interdits attendent votre exploration.",
+                explorationSubDesc: "Chaque expédition dans les profondeurs peut révéler des trésors, des connaissances anciennes, ou des rencontres inattendues...",
+                energyAvailable: "Énergie disponible :",
+                explorationPoints: "Points d'exploration :",
+                
+                // Actions d'exploration
+                searchRuins: "Fouiller les ruines anciennes",
+                followWhispers: "Suivre les murmures spectraux", 
+                descendDeeper: "Descendre plus profondément",
+                returnToHall: "Retourner au Hall Principal",
+                continueExploration: "Continuer l'exploration",
+                returnToDungeon: "Retourner au donjon",
+                
+                // Résultats d'exploration
+                ruinsExploration: "Exploration des Ruines",
+                ruinsDesc: "Vous fouillez minutieusement les décombres de civilisations oubliées...",
+                ancientTreasure: "Vous découvrez un coffre rempli d'or ancien !",
+                
+                spectralWhispers: "Murmures Spectraux", 
+                spectralDesc: "Vous suivez les voix venues d'outre-tombe à travers les couloirs hantés...",
+                silenceDesc: "les voix se taisent, vous laissant dans le silence...",
+                
+                deepAbyss: "Abysses Profonds",
+                abyssDesc: "Vous descendez dans les entrailles de la terre, là où la lumière n'a jamais brillé...",
+                blackVein: "Vous découvrez une veine d'or noir...",
+                
+                // Méditation
+                meditationTitle: "Méditation des Ombres",
+                meditationDesc: "Votre connexion avec les forces obscures se renforce...",
+                spiritSharpens: "Votre esprit s'aiguise.",
+                goldReward: "+24 or, +4 réputation.",
+                
+                // Repos et nouveau jour
+                newDay: "Nouveau Jour",
+                restfulWakeup: "Vous vous réveillez après un repos réparateur dans les ténèbres de votre donjon.",
+                dayBegins: "commence ! Votre énergie est restaurée",
+                shadowsWhisper: "Les ombres vous murmurent que de nouveaux défis vous attendent...",
+                startDay: "Commencer la journée",
+                restComplete: "Repos terminé, énergie restaurée !",
+                
+                // Scène de démarrage
+                darknessAwakening: "L'Éveil des Ténèbres",
+                startSceneIntro: "Les brumes matinales se dissipent, révélant votre nouveau domaine. Cette forteresse oubliée, nichée dans les montagnes maudites, sera le berceau de votre empire des ombres.",
+                startSceneDescription: "Les murs suintent d'une magie ancienne, et l'air vibre de promesses de pouvoir. Votre destin vous attend dans les profondeurs...",
+                firstMission: "Votre première mission : établir votre domination sur ces terres abandonnées par les dieux.",
+                prepareForUnknown: "Préparez-vous à plonger dans l'inconnu...",
+                enterDungeon: "Entrer dans le donjon",
+                
+                // Hall des Ombres
+                hallTitle: "Hall des Ombres Éternelles",
+                hallDesc: "Vous dominez votre domaine depuis votre trône d'obsidienne. Les torches noires projettent des ombres dansantes sur les murs gravés de runes anciennes.",
+                treasure: "Trésor :",
+                terror: "Terreur :",
+                goldPieces: "pièces d'or",
+                points: "points",
+                creatures: "créatures",
+                
+                // Événements aléatoires
+                travelerEvent: "Un voyageur perdu offre de l'or contre sa liberté...",
+                acceptGold: "Accepter l'or (+50 or)",
+                devour: "Le dévorer (+5 réputation)",
+                adventurersEvent: "Des aventuriers tentent d'infiltrer votre donjon !",
+                fight: "Les combattre",
+                negotiate: "Négocier",
+                demonEvent: "Un démon propose un pacte mystérieux...",
+                acceptPact: "Accepter le pacte",
+                
+                // Noms de dongeons
+                catacombs: "Catacombes",
+                deepCrypt: "Crypte Profonde",
+                shadowCitadel: "Citadelle des Ombres",
+                cursedFortress: "Forteresse Maudite",
+                
+                // Fonctionnalités
+                blackMarket: "Marché Noir",
+                alchemyLab: "Laboratoire Alchimique",
+                combatArena: "Arène de Combat",
+                demonPortal: "Portail Démoniaque",
+                
+                // Monstres
+                monsters: {
+                    goblin: { name: "Gobelin", description: "Petit mais vicieux, excellent éclaireur" },
+                    orc: { name: "Orc", description: "Guerrier brutal et résistant" },
+                    troll: { name: "Troll", description: "Colosse destructeur aux poings de pierre" },
+                    sorcier: { name: "Sorcier Noir", description: "Maître des arts obscurs et des malédictions" },
+                    vampire: { name: "Vampire", description: "Noble des ténèbres assoiffé de sang" },
+                    demon: { name: "Démon", description: "Créature des abysses aux pouvoirs terrifiants" }
+                },
+                
+                // Équipement
+                equipment: {
+                    sword: { name: "Épée Rouillée" },
+                    darkSword: { name: "Lame des Ombres" },
+                    cursedBlade: { name: "Lame Maudite" },
+                    shield: { name: "Bouclier de Fer" },
+                    darkShield: { name: "Bouclier des Ombres" },
+                    soulShield: { name: "Bouclier d'Âmes" },
+                    leather: { name: "Armure de Cuir" },
+                    chainmail: { name: "Cotte de Mailles" },
+                    plate: { name: "Armure de Plaques" },
+                    darkPlate: { name: "Armure des Ténèbres" },
+                    boots: { name: "Bottes de Marche" },
+                    shadowBoots: { name: "Bottes de l'Ombre" },
+                    windBoots: { name: "Bottes du Vent" },
+                    ring: { name: "Anneau de Force" },
+                    manaRing: { name: "Anneau de Mana" },
+                    cursedRing: { name: "Anneau Maudit" },
+                    pendant: { name: "Pendentif de Protection" },
+                    darkPendant: { name: "Pendentif des Ombres" },
+                    soulPendant: { name: "Pendentif d'Âme" }
                 }
             }
         };
