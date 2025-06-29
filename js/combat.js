@@ -9,53 +9,8 @@ class Combat {
     }
 
     // Initialiser le système de missions
-    async initialize() {
-        try {
-            // Charger les ennemis pour les descriptions
-            const enemiesResponse = await fetch('./data/enemies.json');
-            this.enemies = await enemiesResponse.json();
-            
-            console.log('Mission system initialized');
-        } catch (error) {
-            console.error('Failed to load mission data:', error);
-            // Données de fallback
-            this.enemies = this.getDefaultEnemies();
-        }
-    }
-
-    // Données d'ennemis par défaut
-    getDefaultEnemies() {
-        return {
-            "village_guard": {
-                "name": "Village Guard",
-                "emoji": "🛡️",
-                "hp": 25,
-                "attack": 8,
-                "defense": 6,
-                "speed": 5,
-                "abilities": ["shield_bash"]
-            }
-        };
-    }
-
-    // Données de capacités par défaut
-    getDefaultAbilities() {
-        return {
-            "abilities": {
-                "shield_bash": {
-                    "name": "Shield Bash",
-                    "damage_multiplier": 0.8,
-                    "effect": "stun"
-                }
-            },
-            "monster_abilities": {
-                "shadow_strike": {
-                    "name": "Shadow Strike",
-                    "damage_multiplier": 1.4,
-                    "effect": "critical"
-                }
-            }
-        };
+    initialize() {
+        console.log('Mission system initialized');
     }
 
     // Démarrer la préparation d'une mission
@@ -587,7 +542,10 @@ class Combat {
             return {
                 text: `
                     <h2>🌙 End of Day Summary</h2>
-                    <p>No missions were completed today. Your monsters rest and prepare for tomorrow's challenges.</p>
+                    <div class="no-missions-summary" style="text-align: center; padding: 30px; background: rgba(0,0,0,0.2); border-radius: 10px; margin: 20px 0;">
+                        <p style="font-size: 1.2em; margin-bottom: 10px;">😴 A Quiet Day</p>
+                        <p>No missions were completed today. Your monsters rest and prepare for tomorrow's challenges.</p>
+                    </div>
                 `,
                 choices: [{
                     text: "💤 Continue to Next Day",
@@ -602,46 +560,142 @@ class Combat {
         let failedMissions = 0;
 
         let summaryText = `<h2>🌙 End of Day Summary</h2>`;
-        summaryText += `<div class="day-summary">`;
-
+        
+        // Statistiques rapides en haut
         missionResults.forEach(result => {
             totalGold += result.rewards.gold;
             totalReputation += result.rewards.reputation;
-            
-            if (result.success) {
-                successfulMissions++;
-                summaryText += `
-                    <div class="mission-result success" style="background: rgba(46, 125, 50, 0.2); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #4caf50;">
-                        <h4>✅ ${result.mission.name} - SUCCESS</h4>
-                        <p>${result.description}</p>
-                        <p><strong>Rewards:</strong> 💰 ${result.rewards.gold} gold, ⭐ ${result.rewards.reputation} reputation</p>
-                        <p><strong>Team:</strong> ${result.mission.team.map(m => `${m.emoji} ${m.name}`).join(', ')}</p>
-                        ${result.equipment ? `<p><strong>🎁 Equipment Found:</strong> ${this.game.equipment[result.equipment].emoji} ${this.game.equipment[result.equipment].name}</p>` : ''}
-                        ${result.casualties > 0 ? `<p><strong>💔 Casualties:</strong> ${result.casualties} monster(s) injured</p>` : ''}
-                    </div>
-                `;
-            } else {
-                failedMissions++;
-                summaryText += `
-                    <div class="mission-result failure" style="background: rgba(183, 28, 28, 0.2); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #f44336;">
-                        <h4>❌ ${result.mission.name} - FAILED</h4>
-                        <p>${result.description}</p>
-                        <p><strong>Rewards:</strong> 💰 ${result.rewards.gold} gold, ⭐ ${result.rewards.reputation} reputation</p>
-                        <p><strong>Team:</strong> ${result.mission.team.map(m => `${m.emoji} ${m.name}`).join(', ')}</p>
-                        ${result.casualties > 0 ? `<p><strong>💔 Casualties:</strong> ${result.casualties} monster(s) injured</p>` : ''}
-                    </div>
-                `;
-            }
+            if (result.success) successfulMissions++;
+            else failedMissions++;
         });
 
         summaryText += `
-            <div class="day-totals" style="background: rgba(0,0,0,0.3); padding: 20px; margin: 20px 0; border-radius: 8px;">
-                <h3>📊 Daily Totals</h3>
-                <p><strong>Missions Completed:</strong> ${missionResults.length} (${successfulMissions} successful, ${failedMissions} failed)</p>
-                <p><strong>Total Gold Earned:</strong> 💰 ${totalGold}</p>
-                <p><strong>Total Reputation Gained:</strong> ⭐ ${totalReputation}</p>
+            <div class="quick-stats" style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+                <div class="stat-card" style="flex: 1; min-width: 120px; background: rgba(76, 175, 80, 0.2); padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold;">${successfulMissions}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">✅ Successful</div>
+                </div>
+                <div class="stat-card" style="flex: 1; min-width: 120px; background: rgba(244, 67, 54, 0.2); padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold;">${failedMissions}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">❌ Failed</div>
+                </div>
+                <div class="stat-card" style="flex: 1; min-width: 120px; background: rgba(255, 193, 7, 0.2); padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold;">${totalGold}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">💰 Gold Earned</div>
+                </div>
+                <div class="stat-card" style="flex: 1; min-width: 120px; background: rgba(156, 39, 176, 0.2); padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold;">${totalReputation}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">⭐ Reputation</div>
+                </div>
             </div>
         `;
+
+        summaryText += `<div class="missions-details">`;
+
+        // Missions réussites en premier
+        const successfulResults = missionResults.filter(r => r.success);
+        const failedResults = missionResults.filter(r => !r.success);
+
+        if (successfulResults.length > 0) {
+            summaryText += `<h3 style="color: #4caf50; margin: 25px 0 15px 0;">🎉 Successful Missions</h3>`;
+            successfulResults.forEach(result => {
+                summaryText += `
+                    <div class="mission-card success" style="background: rgba(46, 125, 50, 0.15); border: 1px solid rgba(76, 175, 80, 0.3); padding: 20px; margin: 15px 0; border-radius: 10px;">
+                        <div class="mission-header" style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; flex: 1; color: #66bb6a;">${result.mission.name}</h4>
+                            <span style="background: rgba(76, 175, 80, 0.3); padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">
+                                ${result.mission.difficulty}
+                            </span>
+                        </div>
+                        
+                        <div class="mission-description" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 6px; border-left: 3px solid #4caf50;">
+                            <em>${result.description}</em>
+                        </div>
+                        
+                        <div class="mission-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div class="team-section">
+                                <strong>👥 Team:</strong><br>
+                                <div style="margin-top: 5px;">
+                                    ${result.mission.team.map(m => `
+                                        <span style="display: inline-block; background: rgba(255,255,255,0.1); padding: 2px 6px; margin: 2px; border-radius: 10px; font-size: 0.9em;">
+                                            ${m.emoji} ${m.name}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="rewards-section">
+                                <strong>🎁 Rewards:</strong><br>
+                                <div style="margin-top: 5px;">
+                                    <div>💰 ${result.rewards.gold} gold</div>
+                                    <div>⭐ ${result.rewards.reputation} reputation</div>
+                                    <div>📈 +${result.experience} XP per monster</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${result.equipment ? `
+                            <div class="bonus-rewards" style="background: rgba(255, 193, 7, 0.2); padding: 10px; border-radius: 6px; border-left: 3px solid #ffc107;">
+                                🎁 <strong>Special Find:</strong> ${this.game.equipment[result.equipment].emoji} ${this.game.equipment[result.equipment].name}
+                            </div>
+                        ` : ''}
+                        
+                        ${result.casualties > 0 ? `
+                            <div class="casualties" style="background: rgba(255, 152, 0, 0.2); padding: 10px; border-radius: 6px; border-left: 3px solid #ff9800; margin-top: 10px;">
+                                🩹 <strong>Casualties:</strong> ${result.casualties} monster(s) injured
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        // Missions échouées
+        if (failedResults.length > 0) {
+            summaryText += `<h3 style="color: #f44336; margin: 25px 0 15px 0;">💀 Failed Missions</h3>`;
+            failedResults.forEach(result => {
+                summaryText += `
+                    <div class="mission-card failure" style="background: rgba(183, 28, 28, 0.15); border: 1px solid rgba(244, 67, 54, 0.3); padding: 20px; margin: 15px 0; border-radius: 10px;">
+                        <div class="mission-header" style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; flex: 1; color: #ef5350;">${result.mission.name}</h4>
+                            <span style="background: rgba(244, 67, 54, 0.3); padding: 4px 8px; border-radius: 12px; font-size: 0.8em;">
+                                ${result.mission.difficulty}
+                            </span>
+                        </div>
+                        
+                        <div class="mission-description" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 6px; border-left: 3px solid #f44336;">
+                            <em>${result.description}</em>
+                        </div>
+                        
+                        <div class="mission-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div class="team-section">
+                                <strong>👥 Team:</strong><br>
+                                <div style="margin-top: 5px;">
+                                    ${result.mission.team.map(m => `
+                                        <span style="display: inline-block; background: rgba(255,255,255,0.1); padding: 2px 6px; margin: 2px; border-radius: 10px; font-size: 0.9em;">
+                                            ${m.emoji} ${m.name}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="rewards-section">
+                                <strong>💔 Consolation:</strong><br>
+                                <div style="margin-top: 5px;">
+                                    <div>💰 ${result.rewards.gold} gold</div>
+                                    <div>⭐ ${result.rewards.reputation} reputation</div>
+                                    <div>📈 +${result.experience} XP per monster</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${result.casualties > 0 ? `
+                            <div class="casualties" style="background: rgba(244, 67, 54, 0.3); padding: 10px; border-radius: 6px; border-left: 3px solid #f44336;">
+                                💔 <strong>Heavy Casualties:</strong> ${result.casualties} monster(s) seriously injured
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
 
         summaryText += `</div>`;
 

@@ -204,19 +204,9 @@ class Game {
         // Afficher les résultats des missions s'il y en a
         let missionSummary = '';
         if (missionResults.length > 0) {
-            missionSummary = `
-                <div class="mission-results-section">
-                    <h3>📋 Mission Reports</h3>
-                    ${missionResults.map(result => `
-                        <div class="mission-result">
-                            <h4>${result.mission.name} - ${result.success ? '✅ SUCCESS' : '❌ FAILURE'}</h4>
-                            <p>${result.description}</p>
-                            ${result.rewards ? `<p class="success">💰 +${result.rewards.gold} gold, ⭐ +${result.rewards.reputation} reputation</p>` : ''}
-                            ${result.casualties ? `<p class="warning">⚰️ ${result.casualties} monster(s) injured/lost</p>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+            // Utiliser le nouveau format de récapitulatif du système de combat
+            const summary = this.combat.generateDayEndSummary(missionResults);
+            missionSummary = summary.text.replace('<h2>🌙 End of Day Summary</h2>', '<h3>📋 Mission Reports</h3>');
         }
         
         this.ui.displayScene(`
