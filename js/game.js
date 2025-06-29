@@ -186,6 +186,9 @@ class Game {
     
     // Repos pour passer au jour suivant
     rest() {
+        // Traiter toutes les missions actives avant de commencer le nouveau jour
+        const missionResults = this.combat.processMissions();
+        
         this.player.day++;
         this.player.energy = this.player.maxEnergy;
         this.player.actionsToday = 0;
@@ -197,11 +200,30 @@ class Game {
             if (event.reputation) this.player.reputation += event.reputation;
             this.addToJournal(`🌙 ${event.text}`);
         }
+
+        // Afficher les résultats des missions s'il y en a
+        let missionSummary = '';
+        if (missionResults.length > 0) {
+            missionSummary = `
+                <div class="mission-results-section">
+                    <h3>📋 Mission Reports</h3>
+                    ${missionResults.map(result => `
+                        <div class="mission-result">
+                            <h4>${result.mission.name} - ${result.success ? '✅ SUCCESS' : '❌ FAILURE'}</h4>
+                            <p>${result.description}</p>
+                            ${result.rewards ? `<p class="success">💰 +${result.rewards.gold} gold, ⭐ +${result.rewards.reputation} reputation</p>` : ''}
+                            ${result.casualties ? `<p class="warning">⚰️ ${result.casualties} monster(s) injured/lost</p>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
         
         this.ui.displayScene(`
             <h2>💤 New Day</h2>
             <p>You wake up after a restful sleep in the darkness of your dungeon.</p>
             <p class="success">🌅 Day ${this.player.day} begins! Your energy is restored (${this.player.maxEnergy}/${this.player.maxEnergy}).</p>
+            ${missionSummary}
             <p>The shadows whisper to you that new challenges await...</p>
         `, [
             { text: `🏰 Start the Day`, action: () => this.showScene('hub') }

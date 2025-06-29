@@ -1,29 +1,25 @@
-// Système de combat tactique
+// Système de gestion de missions
 class Combat {
     constructor(game) {
         this.game = game;
         this.currentMission = null;
         this.selectedMonsters = [];
-        this.combatData = null;
+        this.activeMissions = []; // Missions en cours
+        this.completedMissions = []; // Missions terminées pour le récap
     }
 
-    // Initialiser le système de combat
+    // Initialiser le système de missions
     async initialize() {
         try {
-            // Charger les ennemis
+            // Charger les ennemis pour les descriptions
             const enemiesResponse = await fetch('./data/enemies.json');
             this.enemies = await enemiesResponse.json();
             
-            // Charger les capacités
-            const abilitiesResponse = await fetch('./data/abilities.json');
-            this.abilities = await abilitiesResponse.json();
-            
-            console.log('Combat system initialized with realistic enemies and abilities');
+            console.log('Mission system initialized');
         } catch (error) {
-            console.error('Failed to load combat data:', error);
+            console.error('Failed to load mission data:', error);
             // Données de fallback
             this.enemies = this.getDefaultEnemies();
-            this.abilities = this.getDefaultAbilities();
         }
     }
 
@@ -64,7 +60,7 @@ class Combat {
 
     // Démarrer la préparation d'une mission
     prepareMission(missionKey) {
-        this.currentMission = this.game.missions[missionKey];
+        this.currentMission = { ...this.game.missions[missionKey], key: missionKey };
         this.selectedMonsters = [];
         
         // Vérifier que le joueur a assez d'énergie
@@ -83,28 +79,74 @@ class Combat {
             return this.game.scenes.getMissionsScene();
         }
 
+        // Obtenir seulement les monstres disponibles
+        const availableMonsters = this.getAvailableMonsters();
+        
+        if (availableMonsters.length === 0) {
+            return {
+                text: `
+                    <h2>⚔️ Mission Preparation: ${this.currentMission.name}</h2>
+                    <div class="mission-brief">
+                        <h4>📋 Mission Brief:</h4>
+                        <p>${this.currentMission.description}</p>
+                        <p><strong>Difficulty:</strong> ${this.currentMission.difficulty}</p>
+                        <p><strong>Power Required:</strong> ${this.currentMission.requiredPower}</p>
+                    </div>
+                    
+                    <div class="no-monsters-warning" style="background: rgba(183, 28, 28, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0;">
+                        <h4>⚠️ No monsters available!</h4>
+                        <p>All your monsters are currently on missions. Wait for them to return or choose a different mission.</p>
+                    </div>
+                `,
+                choices: [{
+                    text: "🔙 Back to Missions",
+                    action: () => this.game.showScene('missions')
+                }]
+            };
+        }
+
         let monsterSelection = '<div class="combat-monster-selection">';
         monsterSelection += '<h4>🎯 Select your monsters for this mission:</h4>';
         monsterSelection += '<div class="available-monsters">';
 
+        // Parcourir tous les monstres du joueur pour maintenir les indices
         this.game.player.monsters.forEach((monster, index) => {
-            const isSelected = this.selectedMonsters.includes(index);
-            const monsterType = this.game.monsterTypes[monster.type];
-            
-            // Calculer la puissance du monstre (power de base + level + équipement)
-            const monsterPower = this.calculateMonsterPower(monster);
-            
-            monsterSelection += `
-                <div class="combat-monster-item ${isSelected ? 'selected' : ''}" onclick="game.combat.toggleMonster(${index})">
-                    <div class="monster-info">
-                        <span class="monster-emoji">${monster.emoji || (monsterType ? monsterType.emoji : '👹')}</span>
-                        <span class="monster-name">${monster.name}</span>
-                        <span class="monster-level">Lv.${monster.level || 1}</span>
-                        <span class="monster-power">💪${monsterPower}</span>
+            // Ne montrer que les monstres disponibles
+            if (!monster.onMission) {
+                const isSelected = this.selectedMonsters.includes(index);
+                const monsterType = this.game.monsterTypes[monster.type];
+                
+                // Calculer la puissance du monstre (power de base + level + équipement)
+                const monsterPower = this.calculateMonsterPower(monster);
+                
+                monsterSelection += `
+                    <div class="combat-monster-item ${isSelected ? 'selected' : ''}" onclick="game.combat.toggleMonster(${index})">
+                        <div class="monster-info">
+                            <span class="monster-emoji">${monster.emoji || (monsterType ? monsterType.emoji : '👹')}</span>
+                            <span class="monster-name">${monster.name}</span>
+                            <span class="monster-level">Lv.${monster.level || 1}</span>
+                            <span class="monster-power">💪${monsterPower}</span>
+                        </div>
+                        ${isSelected ? '<span class="selected-indicator">✅</span>' : '<span class="select-indicator">➕</span>'}
                     </div>
-                    ${isSelected ? '<span class="selected-indicator">✅</span>' : '<span class="select-indicator">➕</span>'}
-                </div>
-            `;
+                `;
+            } else {
+                // Afficher les monstres en mission comme indisponibles
+                const monsterType = this.game.monsterTypes[monster.type];
+                const monsterPower = this.calculateMonsterPower(monster);
+                
+                monsterSelection += `
+                    <div class="combat-monster-item unavailable" style="opacity: 0.5; cursor: not-allowed;">
+                        <div class="monster-info">
+                            <span class="monster-emoji">${monster.emoji || (monsterType ? monsterType.emoji : '👹')}</span>
+                            <span class="monster-name">${monster.name}</span>
+                            <span class="monster-level">Lv.${monster.level || 1}</span>
+                            <span class="monster-power">💪${monsterPower}</span>
+                        </div>
+                        <span class="unavailable-indicator">⚔️ On Mission</span>
+                    </div>
+                `;
+            }
         });
 
         monsterSelection += '</div>';
@@ -118,6 +160,7 @@ class Combat {
             <div class="mission-prep-summary">
                 <p><strong>Selected Power:</strong> ${selectedPower} / ${powerNeeded} required</p>
                 <p><strong>Monsters Selected:</strong> ${this.selectedMonsters.length}</p>
+                <p><strong>Available Monsters:</strong> ${availableMonsters.length} / ${this.game.player.monsters.length}</p>
                 <p><strong>Energy Available:</strong> ${this.game.player.energy} / ${this.currentMission.energyCost} required</p>
                 ${selectedPower < powerNeeded ? '<p class="warning">⚠️ Select enough monsters to meet the power requirement!</p>' : ''}
                 ${!hasEnoughEnergy ? '<p class="warning">⚠️ Not enough energy for this mission!</p>' : ''}
@@ -136,6 +179,7 @@ class Combat {
                     <p>${this.currentMission.description}</p>
                     <p><strong>Difficulty:</strong> ${this.currentMission.difficulty}</p>
                     <p><strong>Power Required:</strong> ${this.currentMission.requiredPower}</p>
+                    <p><strong>Expected Enemies:</strong> ${this.getEnemyDescription(this.currentMission.difficulty)}</p>
                 </div>
 
                 ${monsterSelection}
@@ -177,6 +221,12 @@ class Combat {
 
     // Basculer la sélection d'un monstre
     toggleMonster(index) {
+        // Vérifier que le monstre est disponible
+        if (!this.isMonsterAvailable(index)) {
+            this.game.addToJournal('❌ This monster is currently on a mission!');
+            return;
+        }
+
         const selectedIndex = this.selectedMonsters.indexOf(index);
         
         if (selectedIndex === -1) {
@@ -201,1001 +251,410 @@ class Combat {
         }, 0);
     }
 
-    // Démarrer le combat avec simulation en temps réel
-    startCombat() {
-        if (this.selectedMonsters.length === 0) {
-            return this.getMissionPrepScene();
-        }
-
-        // Vérifier que le joueur a encore assez d'énergie
-        if (this.game.player.energy < this.currentMission.energyCost) {
-            this.game.addToJournal(`❌ Not enough energy! You need ${this.currentMission.energyCost} energy for this mission.`);
-            // Forcer le rafraîchissement de la scène de préparation
-            this.game.showScene('missionPrep');
+    // Envoyer une équipe en mission
+    sendMission() {
+        if (!this.currentMission || this.selectedMonsters.length === 0) {
+            this.game.addToJournal('❌ No monsters selected for the mission!');
             return;
         }
 
-        // Consommer l'énergie
-        this.game.player.energy -= this.currentMission.energyCost;
+        const selectedPower = this.calculateSelectedPower();
+        const powerNeeded = this.currentMission.requiredPower;
         
-        // Mettre à jour l'interface utilisateur immédiatement
-        this.game.updateUI();
+        if (selectedPower < powerNeeded) {
+            this.game.addToJournal('❌ Your selected team is too weak for this mission!');
+            return;
+        }
 
-        // Démarrer la simulation de combat en temps réel
-        this.startRealTimeCombat();
-    }
+        if (this.game.player.energy < this.currentMission.energyCost) {
+            this.game.addToJournal('❌ Not enough energy for this mission!');
+            return;
+        }
 
-    // Nouvelle méthode pour démarrer le combat en temps réel
-    startRealTimeCombat() {
-        // Afficher l'écran de combat initial
-        this.showCombatScreen();
-        
-        // Préparer les données de combat
-        const combatData = this.prepareCombatData();
-        
-        // Démarrer la simulation progressive
-        this.runProgressiveCombat(combatData);
-    }
+        // Créer l'objet mission avec l'équipe sélectionnée
+        const missionTeam = this.selectedMonsters.map(index => ({
+            ...this.game.player.monsters[index],
+            originalIndex: index
+        }));
 
-    // Afficher l'écran de combat initial
-    showCombatScreen() {
-        const playerTeam = this.selectedMonsters.map(index => {
-            const monster = this.game.player.monsters[index];
-            return this.getMonsterCombatStats(monster);
-        });
-        
-        const enemyTeam = this.createEnemiesForMission(Object.keys(this.game.missions).find(key => 
-            this.game.missions[key] === this.currentMission
-        ));
-        
-        const combatScreenHtml = `
-            <div class="combat-arena">
-                <h2>⚔️ ${this.currentMission.name}</h2>
-                <p>${this.currentMission.description}</p>
-                
-                <div class="combat-forces">
-                    <div class="player-forces">
-                        <h3>👹 Your Army</h3>
-                        <div class="monster-list">
-                            ${playerTeam.map(unit => 
-                                `<div class="monster-card">
-                                    ${unit.emoji} ${unit.name} 
-                                    <span class="hp">❤️${unit.hp}</span>
-                                    <span class="attack">⚔️${unit.attack}</span>
-                                    <span class="defense">🛡️${unit.defense}</span>
-                                    <span class="speed">⚡${unit.speed}</span>
-                                </div>`
-                            ).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="vs-divider">⚔️ VS ⚔️</div>
-                    
-                    <div class="enemy-forces">
-                        <h3>💀 Enemy Forces</h3>
-                        <div class="enemy-list">
-                            ${enemyTeam.map(unit => 
-                                `<div class="enemy-card">
-                                    ${unit.emoji} ${unit.name}
-                                    <span class="hp">❤️${unit.hp}</span>
-                                    <span class="attack">⚔️${unit.attack}</span>
-                                    <span class="defense">🛡️${unit.defense}</span>
-                                    <span class="speed">⚡${unit.speed}</span>
-                                </div>`
-                            ).join('')}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="combat-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="combatProgress" style="width: 0%"></div>
-                    </div>
-                    <p class="progress-text">🔥 Battle is about to begin...</p>
-                </div>
-                
-                <div class="combat-log" id="combatLog" style="max-height: 400px; overflow-y: auto; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p style="color: #888; font-style: italic;">📜 Combat journal will appear here...</p>
-                </div>
-                
-                <div class="combat-actions" id="combatActions" style="display: none;">
-                    <!-- Les boutons d'action apparaîtront ici après le combat -->
-                </div>
-            </div>
-        `;
-        
-        this.game.ui.displayScene(combatScreenHtml, []);
-    }
-
-    // Préparer toutes les données nécessaires pour le combat
-    prepareCombatData() {
-        // Utiliser le nouveau système de combat réaliste
-        const combatResult = this.simulateRealisticCombat();
-        
-        return {
-            victory: combatResult.victory,
-            outcome: combatResult.outcome,
-            combatLog: combatResult.combatLog,
-            totalSteps: combatResult.combatLog.length,
-            playerTeam: combatResult.playerTeam,
-            enemyTeam: combatResult.enemyTeam,
-            casualties: combatResult.casualties
+        const mission = {
+            ...this.currentMission,
+            team: missionTeam,
+            teamPower: selectedPower,
+            sentAt: Date.now()
         };
-    }
 
-    // Exécuter le combat progressivement
-    async runProgressiveCombat(combatData) {
-        const logElement = document.getElementById('combatLog');
-        const progressElement = document.getElementById('combatProgress');
-        const progressText = document.querySelector('.progress-text');
-        
-        // Vider le journal
-        logElement.innerHTML = '';
-        
-        // Afficher chaque ligne du journal progressivement
-        for (let i = 0; i < combatData.combatLog.length; i++) {
-            const line = combatData.combatLog[i];
-            const progress = ((i + 1) / combatData.totalSteps) * 100;
-            
-            // Mettre à jour la barre de progression
-            progressElement.style.width = `${progress}%`;
-            
-            // Mettre à jour le texte de progression
-            if (i < 5) {
-                progressText.textContent = '🎯 Preparing for battle...';
-            } else if (i < combatData.totalSteps - 5) {
-                progressText.textContent = '⚔️ Battle raging...';
-            } else {
-                progressText.textContent = '🏁 Battle concluding...';
-            }
-            
-            // Ajouter la ligne au journal
-            if (line === '---') {
-                logElement.innerHTML += '<hr style="border: 1px solid #555; margin: 10px 0;">';
-            } else {
-                const lineElement = document.createElement('p');
-                lineElement.style.cssText = 'margin: 5px 0; line-height: 1.4; opacity: 0; transition: opacity 0.3s ease;';
-                lineElement.innerHTML = line;
-                logElement.appendChild(lineElement);
-                
-                // Animation d'apparition
-                setTimeout(() => {
-                    lineElement.style.opacity = '1';
-                }, 50);
-            }
-            
-            // Faire défiler vers le bas
-            logElement.scrollTop = logElement.scrollHeight;
-            
-            // Délai entre chaque ligne (plus court pour les séparateurs)
-            const delay = line === '---' ? 200 : 
-                         line.includes('<strong>') ? 800 : 
-                         line.startsWith('   ') ? 400 : 600;
-            
-            await this.delay(delay);
-        }
-        
-        // Combat terminé
-        progressText.textContent = combatData.victory ? '🎉 Victory!' : '💀 Defeat...';
-        progressElement.style.width = '100%';
-        progressElement.style.backgroundColor = combatData.victory ? '#27ae60' : '#e74c3c';
-        
-        // Traiter les résultats
-        this.processCombatResults(combatData);
-        
-        // Attendre un peu avant d'afficher les actions
-        await this.delay(1500);
-        
-        // Afficher les boutons d'action
-        this.showCombatResults(combatData);
-    }
+        // Ajouter à la liste des missions actives
+        this.activeMissions.push(mission);
 
-    // Fonction utilitaire pour créer des délais
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+        // Consommer l'énergie immédiatement
+        this.game.consumeEnergy(this.currentMission.energyCost);
 
-    // Afficher les résultats finaux du combat
-    showCombatResults(result) {
-        const actionsElement = document.getElementById('combatActions');
-        
-        let resultHtml = `
-            <div class="combat-result ${result.victory ? 'victory' : 'defeat'}">
-                <h3>${result.victory ? '🎉 Victory!' : '💀 Defeat...'}</h3>
-        `;
-        
-        if (result.victory) {
-            let equipmentRewardsHtml = '';
-            if (result.equipmentRewards && result.equipmentRewards.length > 0) {
-                equipmentRewardsHtml = `
-                    <div class="equipment-rewards">
-                        <h5>📦 Equipment Found:</h5>
-                        ${result.equipmentRewards.map(item => 
-                            `<p class="equipment-reward">${item.emoji} ${item.name}</p>`
-                        ).join('')}
-                    </div>
-                `;
-            }
-            
-            resultHtml += `
-                <div class="mission-rewards">
-                    <h4>🎁 Mission Rewards:</h4>
-                    <p>💰 Gold: +${result.goldReward}</p>
-                    <p>⭐ Reputation: +${result.repReward}</p>
-                    <p>📈 Experience: +${result.experienceGain} for all participants</p>
-                    ${equipmentRewardsHtml}
-                    ${result.outcome === 'crushing_victory' ? '<p class="bonus">🔥 Crushing victory bonus applied!</p>' : ''}
-                </div>
-            `;
-        } else {
-            resultHtml += `
-                <div class="mission-failure">
-                    <h4>💔 No rewards from this defeat</h4>
-                    <p>📈 Experience: +${result.experienceGain} (learning from failure)</p>
-                    <p>💪 Your monsters gained valuable battle experience!</p>
-                </div>
-            `;
-        }
-        
-        resultHtml += '</div>';
-        
-        // Boutons d'action
-        const choices = this.getCombatResultChoices();
-        const buttonsHtml = choices.map((choice, index) => 
-            `<button class="choice-btn combat-result-btn-${index}" ${choice.disabled ? 'disabled' : ''}>${choice.text}</button>`
-        ).join('');
-        
-        resultHtml += `<div class="combat-choices">${buttonsHtml}</div>`;
-        
-        actionsElement.innerHTML = resultHtml;
-        actionsElement.style.display = 'block';
-        
-        // Configurer les événements des boutons
-        choices.forEach((choice, index) => {
-            const button = actionsElement.querySelector(`.combat-result-btn-${index}`);
-            if (button && !button.disabled) {
-                button.onclick = () => choice.action();
-            }
-        });
-        
-        // Mettre à jour l'interface utilisateur
-        this.game.updateUI();
-    }
-
-    // Simuler le combat avec journal détaillé
-    simulateCombat() {
-        const playerPower = this.calculateSelectedPower();
-        const enemyPower = this.currentMission.requiredPower;
-        
-        // Créer le journal de combat
-        const combatLog = [];
-        
-        // Introduction du combat
-        combatLog.push(`🎯 <strong>Mission: ${this.currentMission.name}</strong>`);
-        combatLog.push(`📍 ${this.currentMission.description}`);
-        combatLog.push(`⚔️ <em>Your forces approach the battlefield...</em>`);
-        combatLog.push(`---`);
-        
-        // Présentation des forces
-        combatLog.push(`👹 <strong>Your Army (Power: ${playerPower})</strong>`);
+        // Marquer les monstres comme en mission (optionnel - on peut les rendre indisponibles)
         this.selectedMonsters.forEach(index => {
-            const monster = this.game.player.monsters[index];
-            const power = this.calculateMonsterPower(monster);
-            combatLog.push(`   ${monster.emoji} ${monster.name} (Lv.${monster.level}) - Power: ${power}`);
+            this.game.player.monsters[index].onMission = true;
+            this.game.player.monsters[index].missionKey = this.currentMission.key;
         });
+
+        // Message de confirmation
+        this.game.addToJournal(`⚔️ ${this.currentMission.name}: Team of ${missionTeam.length} monsters sent! (${selectedPower} power)`);
         
-        combatLog.push(`💀 <strong>Enemy Forces (Power: ${enemyPower})</strong>`);
-        combatLog.push(`   ${this.getEnemyDescription()}`);
-        combatLog.push(`---`);
-        
-        // Simulation du combat tour par tour
-        const combatTurns = this.simulateCombatTurns(playerPower, enemyPower);
-        combatLog.push(...combatTurns.log);
-        
-        return {
-            victory: combatTurns.victory,
-            outcome: combatTurns.outcome,
-            playerPower: playerPower,
-            enemyPower: enemyPower,
-            powerDifference: Math.abs(playerPower - enemyPower),
-            combatLog: combatLog
-        };
+        // Réinitialiser la sélection
+        this.currentMission = null;
+        this.selectedMonsters = [];
+
+        // Mettre à jour l'UI et retourner aux missions
+        this.game.updateUI();
+        this.game.showScene('missions');
     }
 
-    // Générer une description des ennemis selon la mission
-    getEnemyDescription() {
-        const descriptions = {
-            'Village Guards': '🛡️ Village Guards with rusty swords and wooden shields',
-            'Bandits': '🏹 Ruthless bandits with daggers and crossbows',
-            'Royal Soldiers': '⚔️ Well-armed royal soldiers in gleaming armor',
-            'Elite Guards': '🛡️ Elite palace guards with enchanted weapons',
-            'Holy Knights': '✨ Holy knights blessed with divine protection'
-        };
-        
-        // Utiliser la difficulté de la mission pour déterminer le type d'ennemi
-        const difficulty = this.currentMission.difficulty;
-        if (difficulty === 'Easy') return descriptions['Village Guards'];
-        if (difficulty === 'Medium') return descriptions['Bandits'];
-        if (difficulty === 'Hard') return descriptions['Royal Soldiers'];
-        if (difficulty === 'Very Hard') return descriptions['Elite Guards'];
-        return descriptions['Holy Knights'];
-    }
-
-    // Simuler le combat tour par tour
-    simulateCombatTurns(playerPower, enemyPower) {
-        const log = [];
-        
-        // Facteur de chance pour la variabilité
-        const playerRoll = playerPower * (0.8 + Math.random() * 0.4);
-        const enemyRoll = enemyPower * (0.8 + Math.random() * 0.4);
-        
-        log.push(`⚡ <strong>Battle Begins!</strong>`);
-        log.push(`🎲 Your forces roll: ${Math.round(playerRoll)} effective power`);
-        log.push(`🎲 Enemy forces roll: ${Math.round(enemyRoll)} effective power`);
-        log.push(`---`);
-        
-        // Simuler quelques tours de combat
-        const turns = Math.min(3 + Math.floor(Math.random() * 3), this.selectedMonsters.length);
-        
-        for (let turn = 1; turn <= turns; turn++) {
-            const monsterIndex = this.selectedMonsters[Math.floor(Math.random() * this.selectedMonsters.length)];
-            const monster = this.game.player.monsters[monsterIndex];
-            
-            // Actions variées selon le tour
-            if (turn === 1) {
-                log.push(`🥊 Turn ${turn}: ${monster.emoji} ${monster.name} charges into battle!`);
-                if (playerRoll > enemyRoll) {
-                    log.push(`   💥 ${monster.name} lands a devastating blow on the enemy ranks!`);
-                } else {
-                    log.push(`   🛡️ The enemies block ${monster.name}'s attack skillfully!`);
-                }
-            } else if (turn === 2) {
-                log.push(`⚔️ Turn ${turn}: ${monster.emoji} ${monster.name} unleashes a special attack!`);
-                if (Math.random() > 0.5) {
-                    log.push(`   ✨ ${monster.name}'s attack finds its mark - critical hit!`);
-                } else {
-                    log.push(`   ⚡ ${monster.name} is countered by enemy magic!`);
-                }
-            } else {
-                log.push(`🔥 Turn ${turn}: ${monster.emoji} ${monster.name} fights with determination!`);
-                const outcomes = [
-                    `   💫 ${monster.name} overwhelms multiple enemies!`,
-                    `   🎯 ${monster.name} strikes with precision!`,
-                    `   💀 ${monster.name} shows no mercy!`,
-                    `   ⚡ ${monster.name} dodges and counters!`
-                ];
-                log.push(outcomes[Math.floor(Math.random() * outcomes.length)]);
-            }
-        }
-        
-        log.push(`---`);
-        
-        // Déterminer le résultat final
-        const victory = playerRoll > enemyRoll;
-        const powerDifference = Math.abs(playerRoll - enemyRoll);
-        
-        let outcome;
-        if (victory) {
-            if (powerDifference > enemyPower * 0.5) {
-                outcome = 'crushing_victory';
-                log.push(`🎊 <strong>CRUSHING VICTORY!</strong>`);
-                log.push(`💥 Your forces completely overwhelm the enemy!`);
-                log.push(`🏃 The survivors flee in terror!`);
-            } else if (powerDifference > enemyPower * 0.2) {
-                outcome = 'victory';
-                log.push(`🎉 <strong>VICTORY!</strong>`);
-                log.push(`⚔️ Your forces emerge triumphant after fierce fighting!`);
-                log.push(`👑 The battlefield is yours!`);
-            } else {
-                outcome = 'narrow_victory';
-                log.push(`😤 <strong>Narrow Victory</strong>`);
-                log.push(`🩸 Victory comes at a cost - the battle was close!`);
-                log.push(`💪 Your forces barely secure the win!`);
-            }
-        } else {
-            if (powerDifference > playerPower * 0.3) {
-                outcome = 'crushing_defeat';
-                log.push(`💀 <strong>CRUSHING DEFEAT!</strong>`);
-                log.push(`😱 Your forces are completely routed!`);
-                log.push(`🏃 You must retreat immediately!`);
-            } else if (powerDifference > playerPower * 0.1) {
-                outcome = 'defeat';
-                log.push(`😞 <strong>Defeat</strong>`);
-                log.push(`⚔️ Despite brave efforts, your forces are overwhelmed!`);
-                log.push(`🛡️ A tactical retreat is necessary!`);
-            } else {
-                outcome = 'narrow_defeat';
-                log.push(`😔 <strong>Narrow Defeat</strong>`);
-                log.push(`💥 So close! Your forces fought valiantly but fell just short!`);
-                log.push(`💪 This defeat will make you stronger!`);
-            }
-        }
-        
-        return {
-            victory,
-            outcome,
-            log
-        };
-    }
-
-    // Scène de résultat de combat
-    getCombatResultScene(result) {
-        let goldReward = 0;
-        let repReward = 0;
-        let experienceGain = 1;
-
-        if (result.victory) {
-            // Calculer les récompenses selon la qualité de la victoire
-            const baseGold = this.currentMission.reward.gold;
-            const baseRep = this.currentMission.reward.reputation;
-
-            switch (result.outcome) {
-                case 'crushing_victory':
-                    goldReward = Math.round(baseGold * 1.5);
-                    repReward = Math.round(baseRep * 1.5);
-                    experienceGain = 3;
-                    break;
-                case 'victory':
-                    goldReward = baseGold;
-                    repReward = baseRep;
-                    experienceGain = 2;
-                    break;
-                case 'narrow_victory':
-                    goldReward = Math.round(baseGold * 0.8);
-                    repReward = Math.round(baseRep * 0.8);
-                    experienceGain = 1;
-                    break;
-            }
-
-            // Appliquer les récompenses
-            this.game.player.gold += goldReward;
-            this.game.player.reputation += repReward;
-
-            // Donner de l'expérience aux monstres participants
-            this.selectedMonsters.forEach(index => {
-                this.game.actions.giveExperience(index, experienceGain);
-            });
-            
-            // Mettre à jour l'interface utilisateur
-            this.game.updateUI();
-        }
-
-        const outcomeMessages = {
-            'crushing_victory': {
-                title: '🎊 Crushing Victory!',
-                message: 'Your monsters dominate the battlefield with overwhelming force! The enemy flees in terror.',
-                class: 'success'
-            },
-            'victory': {
-                title: '✅ Victory!',
-                message: 'Your dark legion emerges victorious. The mission is a success!',
-                class: 'success'
-            },
-            'narrow_victory': {
-                title: '⚖️ Narrow Victory',
-                message: 'A hard-fought battle, but your monsters prevail. Some are wounded but alive.',
-                class: 'warning'
-            },
-            'narrow_defeat': {
-                title: '💥 Narrow Defeat',
-                message: 'Your monsters fought bravely but were overwhelmed. They retreat to fight another day.',
-                class: 'error'
-            },
-            'defeat': {
-                title: '💀 Defeat',
-                message: 'The mission failed. Your monsters return battered and demoralized.',
-                class: 'error'
-            }
-        };
-
-        const outcome = outcomeMessages[result.outcome];
-
-        return {
-            text: `
-                <h2>⚔️ Combat Journal</h2>
-                
-                <div class="combat-log" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin: 20px 0; max-height: 400px; overflow-y: auto; border-left: 4px solid #8b4513;">
-                    ${result.combatLog.map(line => {
-                        if (line === '---') return '<hr style="border: 1px solid #555; margin: 10px 0;">';
-                        return `<p style="margin: 5px 0; line-height: 1.4;">${line}</p>`;
-                    }).join('')}
-                </div>
-
-                ${result.victory ? `
-                    <div class="mission-rewards" style="background: rgba(46, 125, 50, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0;">
-                        <h4>🎁 Mission Rewards:</h4>
-                        <p>💰 Gold: +${goldReward}</p>
-                        <p>⭐ Reputation: +${repReward}</p>
-                        <p>📈 Experience: +${experienceGain} for all participants</p>
-                    </div>
-                ` : `
-                    <div class="mission-failure" style="background: rgba(183, 28, 28, 0.2); padding: 15px; border-radius: 6px; margin: 15px 0;">
-                        <h4>💔 No rewards from this defeat</h4>
-                        <p>💪 But your monsters gained experience from the battle!</p>
-                    </div>
-                `}
-            `,
-            choices: this.getCombatResultChoices()
-        };
-    }
-
-    // Traiter les résultats du combat (récompenses, XP, etc.)
-    processCombatResults(result) {
-        let goldReward = 0;
-        let repReward = 0;
-        let experienceGain = 0;
-        let equipmentRewards = [];
-
-        if (result.victory) {
-            const baseGold = this.currentMission.reward.gold;
-            const baseRep = this.currentMission.reward.reputation;
-
-            // Calculer les récompenses selon le type de victoire
-            switch (result.outcome) {
-                case 'crushing_victory':
-                    goldReward = Math.round(baseGold * 1.5);
-                    repReward = Math.round(baseRep * 1.5);
-                    experienceGain = 5;
-                    break;
-                case 'victory':
-                    goldReward = baseGold;
-                    repReward = baseRep;
-                    experienceGain = 2;
-                    break;
-                case 'narrow_victory':
-                    goldReward = Math.round(baseGold * 0.8);
-                    repReward = Math.round(baseRep * 0.8);
-                    experienceGain = 1;
-                    break;
-            }
-
-            // Traiter les récompenses d'équipement
-            if (this.currentMission.reward.items && this.currentMission.reward.items.length > 0) {
-                // Chance d'obtenir de l'équipement selon le type de victoire
-                let equipmentChance = 0.4; // 40% de base
-                
-                switch (result.outcome) {
-                    case 'crushing_victory':
-                        equipmentChance = 0.8; // 80% de chance
-                        break;
-                    case 'victory':
-                        equipmentChance = 0.5; // 50% de chance
-                        break;
-                    case 'narrow_victory':
-                        equipmentChance = 0.3; // 30% de chance
-                        break;
-                }
-
-                if (Math.random() < equipmentChance) {
-                    const randomItem = this.currentMission.reward.items[Math.floor(Math.random() * this.currentMission.reward.items.length)];
-                    
-                    // Vérifier que l'item existe dans l'équipement
-                    if (this.game.equipment[randomItem]) {
-                        this.game.player.inventory.push(randomItem);
-                        equipmentRewards.push({
-                            id: randomItem,
-                            name: this.game.equipment[randomItem].name,
-                            emoji: this.game.equipment[randomItem].emoji
-                        });
-                        this.game.addToJournal(`📦 You find ${this.game.equipment[randomItem].emoji} ${this.game.equipment[randomItem].name}!`);
-                    } else {
-                        // Si l'item n'existe pas, donner de l'or supplémentaire à la place
-                        const bonusGold = Math.floor(Math.random() * 50) + 25; // 25-75 gold bonus
-                        goldReward += bonusGold;
-                        this.game.addToJournal(`💰 You find ancient treasures worth ${bonusGold} gold!`);
-                    }
-                }
-            }
-
-            // Appliquer les récompenses
-            this.game.player.gold += goldReward;
-            this.game.player.reputation += repReward;
-            
-            // Ajouter au storage des récompenses pour l'affichage
-            result.goldReward = goldReward;
-            result.repReward = repReward;
-            result.equipmentRewards = equipmentRewards;
-        } else {
-            // Même en cas de défaite, un peu d'XP pour l'apprentissage
-            experienceGain = 1;
-            result.goldReward = 0;
-            result.repReward = 0;
-            result.equipmentRewards = [];
-        }
-
-        // Donner de l'expérience aux monstres participants
-        this.selectedMonsters.forEach(index => {
-            this.game.actions.giveExperience(index, experienceGain);
-        });
-        
-        result.experienceGain = experienceGain;
-    }
-
-    // Générer les choix pour la scène de préparation de mission
+    // Obtenir les choix pour la préparation de mission
     getMissionPrepChoices(canStart, hasEnoughEnergy) {
         const choices = [];
 
-        // Si le joueur n'a pas d'énergie, proposer de se reposer
-        if (!hasEnoughEnergy || this.game.player.energy < this.currentMission.energyCost) {
+        if (canStart) {
             choices.push({
-                text: '💤 Rest (Restore Energy)', 
-                action: () => {
-                    this.game.rest();
-                    this.game.showScene('hub');
-                }
-            });
-        } else {
-            // Sinon, proposer de démarrer la mission
-            choices.push({
-                text: '⚔️ Start Mission', 
-                action: () => this.startCombat(), 
-                disabled: !canStart 
+                text: "🚀 Launch Mission",
+                action: () => this.sendMission()
             });
         }
 
-        // Toujours permettre de retourner à la table de guerre
         choices.push({
-            text: '🏰 Return to War Table', 
-            action: () => this.game.showScene('missions') 
-        });
-
-        return choices;
-    }
-
-    // Générer les choix pour la scène de résultat de combat
-    getCombatResultChoices() {
-        const choices = [];
-
-        // Vérifier si le joueur peut préparer une autre mission similaire
-        const hasEnoughEnergyForSameMission = this.game.player.energy >= this.currentMission.energyCost;
-        
-        if (hasEnoughEnergyForSameMission) {
-            choices.push({
-                text: '🔄 Prepare Another Mission',
-                action: () => this.game.showScene('missionPrep')
-            });
-        }
-
-        // Toujours permettre de retourner à la table de guerre ou au hall principal
-        choices.push({
-            text: '⚔️ Return to War Table', 
+            text: "🔙 Back to Missions",
             action: () => this.game.showScene('missions')
         });
-        
-        choices.push({
-            text: '🏰 Return to Main Hall', 
-            action: () => this.game.showScene('hub')
-        });
 
         return choices;
     }
 
-    // Créer les ennemis pour une mission
-    createEnemiesForMission(missionKey) {
-        const mission = this.game.missions[missionKey];
-        const enemies = [];
-        
-        // Mapping des missions vers les types d'ennemis
-        const missionEnemyMap = {
-            "village": [
-                { type: "village_guard", count: 2 },
-                { type: "farm_worker", count: 3 }
-            ],
-            "ferme": [
-                { type: "farm_worker", count: 4 }
-            ],
-            "caravane": [
-                { type: "merchant_guard", count: 3 },
-                { type: "village_guard", count: 1 }
-            ],
-            "convoi": [
-                { type: "royal_soldier", count: 2 },
-                { type: "merchant_guard", count: 2 }
-            ],
-            "chateau": [
-                { type: "castle_knight", count: 2 },
-                { type: "royal_soldier", count: 3 }
-            ],
-            "port": [
-                { type: "port_captain", count: 1 },
-                { type: "merchant_guard", count: 3 },
-                { type: "royal_soldier", count: 2 }
-            ]
+    // Générer une description des ennemis selon la mission
+    getEnemyDescription(difficulty) {
+        const descriptions = {
+            'Easy': '🛡️ Village Guards with rusty swords and wooden shields',
+            'Medium': '🏹 Ruthless bandits with daggers and crossbows', 
+            'Hard': '⚔️ Well-armed royal soldiers in gleaming armor',
+            'Very Hard': '🛡️ Elite palace guards with enchanted weapons',
+            'Extreme': '✨ Holy knights blessed with divine protection'
         };
         
-        const enemyGroups = missionEnemyMap[missionKey] || [
-            { type: "village_guard", count: 2 }
-        ];
-        
-        // Créer les instances d'ennemis
-        enemyGroups.forEach(group => {
-            for (let i = 0; i < group.count; i++) {
-                const enemyTemplate = this.enemies[group.type];
-                if (enemyTemplate) {
-                    const enemy = {
-                        id: `${group.type}_${i}`,
-                        name: enemyTemplate.name,
-                        emoji: enemyTemplate.emoji,
-                        maxHp: enemyTemplate.hp,
-                        hp: enemyTemplate.hp,
-                        attack: enemyTemplate.attack,
-                        defense: enemyTemplate.defense,
-                        speed: enemyTemplate.speed,
-                        abilities: [...enemyTemplate.abilities],
-                        effects: [],
-                        isAlive: true
-                    };
-                    enemies.push(enemy);
-                }
-            }
-        });
-        
-        return enemies;
+        return descriptions[difficulty] || descriptions['Easy'];
     }
 
-    // Calculer les stats de combat d'un monstre
-    getMonsterCombatStats(monster) {
-        const baseStats = monster.baseStats || { strength: 1, defense: 1, speed: 1, magic: 1 };
-        const level = monster.level || 1;
-        
-        // Calculer les stats de combat
-        let hp = 20 + (baseStats.strength + baseStats.defense) * 3 + (level - 1) * 5;
-        let attack = baseStats.strength + Math.floor(baseStats.magic / 2) + (level - 1) * 2;
-        let defense = baseStats.defense + Math.floor(baseStats.strength / 3) + (level - 1);
-        let speed = baseStats.speed + Math.floor(baseStats.magic / 3) + (level - 1);
-        
-        // Bonus d'équipement
-        if (monster.equipment) {
-            Object.values(monster.equipment).forEach(equipId => {
-                if (equipId && this.game.equipment[equipId]) {
-                    const equipment = this.game.equipment[equipId];
-                    if (equipment.stats) {
-                        hp += (equipment.stats.strength || 0) * 3;
-                        attack += (equipment.stats.strength || 0) + (equipment.stats.magic || 0);
-                        defense += (equipment.stats.defense || 0);
-                        speed += (equipment.stats.speed || 0);
-                    }
-                }
-            });
+    // Obtenir le récapitulatif des missions actives
+    getActiveMissionsStatus() {
+        if (this.activeMissions.length === 0) {
+            return {
+                hasActiveMissions: false,
+                summary: "No missions currently active."
+            };
         }
-        
-        // Déterminer les capacités selon le type
-        const abilities = this.getMonsterAbilities(monster);
-        
+
+        let summary = `<h4>📋 Active Missions (${this.activeMissions.length}):</h4>`;
+        let totalMonstersOnMission = 0;
+
+        this.activeMissions.forEach((mission, index) => {
+            totalMonstersOnMission += mission.team.length;
+            const teamNames = mission.team.map(monster => `${monster.emoji} ${monster.name}`).join(', ');
+            
+            summary += `
+                <div class="active-mission-item" style="background: rgba(0,100,0,0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                    <p><strong>${mission.name}</strong> (${mission.difficulty})</p>
+                    <p>👥 Team: ${teamNames}</p>
+                    <p>💪 Power: ${mission.teamPower} / ${mission.requiredPower}</p>
+                </div>
+            `;
+        });
+
         return {
-            name: monster.name,
-            emoji: monster.emoji,
-            maxHp: hp,
-            hp: hp,
-            attack: attack,
-            defense: defense,
-            speed: speed,
-            abilities: abilities,
-            effects: [],
-            isAlive: true,
-            monsterId: monster.id || Math.random().toString(36).substr(2, 9)
+            hasActiveMissions: true,
+            summary: summary,
+            totalMonstersOnMission: totalMonstersOnMission
         };
     }
 
-    // Obtenir les capacités d'un monstre selon son type
-    getMonsterAbilities(monster) {
-        const typeAbilities = {
-            "Imp": ["shadow_strike"],
-            "Shadow": ["shadow_strike", "terror"],
-            "Wraith": ["life_drain", "terror"],
-            "Sorcerer": ["dark_magic"],
-            "Lich": ["dark_magic", "life_drain"],
-            "Demon": ["dark_magic", "terror"],
-            "Orc": ["brute_force"],
-            "Troll": ["brute_force", "rage"],
-            "Dragon": ["brute_force", "dark_magic", "terror"]
-        };
-        
-        return typeAbilities[monster.type] || ["shadow_strike"];
-    }
+    // Traiter toutes les missions actives en fin de journée
+    processMissions() {
+        if (this.activeMissions.length === 0) {
+            return [];
+        }
 
-    // Nouveau système de combat réaliste
-    simulateRealisticCombat() {
-        // Préparer les combattants
-        const playerTeam = this.selectedMonsters.map(index => {
-            const monster = this.game.player.monsters[index];
-            return this.getMonsterCombatStats(monster);
-        });
-        
-        const enemyTeam = this.createEnemiesForMission(Object.keys(this.game.missions).find(key => 
-            this.game.missions[key] === this.currentMission
-        ));
-        
-        const combatLog = [];
-        let turn = 1;
-        const maxTurns = 20; // Limite pour éviter les combats infinis
-        
-        // Introduction du combat
-        combatLog.push(`🎯 <strong>Mission: ${this.currentMission.name}</strong>`);
-        combatLog.push(`📍 ${this.currentMission.description}`);
-        combatLog.push(`⚔️ <em>The battle begins!</em>`);
-        combatLog.push(`---`);
-        
-        // Présentation des équipes
-        combatLog.push(`👹 <strong>Your Army</strong>`);
-        playerTeam.forEach(unit => {
-            combatLog.push(`   ${unit.emoji} ${unit.name} - HP: ${unit.hp}, ATK: ${unit.attack}, DEF: ${unit.defense}`);
-        });
-        
-        combatLog.push(`💀 <strong>Enemy Forces</strong>`);
-        enemyTeam.forEach(unit => {
-            combatLog.push(`   ${unit.emoji} ${unit.name} - HP: ${unit.hp}, ATK: ${unit.attack}, DEF: ${unit.defense}`);
-        });
-        combatLog.push(`---`);
-        
-        // Combat tour par tour
-        while (turn <= maxTurns) {
-            // Vérifier les conditions de victoire
-            const alivePlayerUnits = playerTeam.filter(unit => unit.isAlive);
-            const aliveEnemyUnits = enemyTeam.filter(unit => unit.isAlive);
-            
-            if (alivePlayerUnits.length === 0) {
-                combatLog.push(`💀 <strong>DEFEAT!</strong> All your monsters have fallen!`);
-                break;
+        const results = [];
+
+        // Traiter chaque mission active
+        this.activeMissions.forEach(mission => {
+            const result = this.simulateMissionOutcome(mission);
+            results.push(result);
+
+            // Appliquer les récompenses ou pénalités
+            if (result.success) {
+                this.game.player.gold += result.rewards.gold;
+                this.game.player.reputation += result.rewards.reputation;
+                
+                // Équipement possible
+                if (result.equipment) {
+                    this.game.player.inventory.push(result.equipment);
+                }
+
+                // Expérience pour les monstres
+                mission.team.forEach(monster => {
+                    const originalMonster = this.game.player.monsters[monster.originalIndex];
+                    if (originalMonster) {
+                        this.game.actions.giveExperience(monster.originalIndex, result.experience || 3);
+                    }
+                });
+
+                // Log de succès
+                this.game.addToJournal(`✅ Mission "${mission.name}" completed successfully! +${result.rewards.gold} gold, +${result.rewards.reputation} reputation`);
+            } else {
+                // Log d'échec
+                this.game.addToJournal(`❌ Mission "${mission.name}" failed. Your team retreats with minimal rewards.`);
+                
+                // Donner un peu d'XP même en cas d'échec
+                mission.team.forEach(monster => {
+                    const originalMonster = this.game.player.monsters[monster.originalIndex];
+                    if (originalMonster) {
+                        this.game.actions.giveExperience(monster.originalIndex, 1);
+                    }
+                });
             }
-            
-            if (aliveEnemyUnits.length === 0) {
-                combatLog.push(`🎉 <strong>VICTORY!</strong> All enemies have been defeated!`);
-                break;
-            }
-            
-            combatLog.push(`🔥 <strong>Turn ${turn}</strong>`);
-            
-            // Créer l'ordre d'initiative basé sur la vitesse
-            const allUnits = [...alivePlayerUnits, ...aliveEnemyUnits].sort((a, b) => {
-                // Ajouter un facteur aléatoire pour la variété
-                const aSpeed = a.speed + Math.random() * 3;
-                const bSpeed = b.speed + Math.random() * 3;
-                return bSpeed - aSpeed;
-            });
-            
-            // Chaque unité agit
-            for (const unit of allUnits) {
-                if (!unit.isAlive) continue;
-                
-                const isPlayerUnit = playerTeam.includes(unit);
-                const enemies = isPlayerUnit ? aliveEnemyUnits : alivePlayerUnits;
-                const allies = isPlayerUnit ? alivePlayerUnits : aliveEnemyUnits;
-                
-                if (enemies.length === 0) break;
-                
-                // Choisir une cible
-                const target = enemies[Math.floor(Math.random() * enemies.length)];
-                
-                // Effectuer l'attaque
-                const attackResult = this.performAttack(unit, target, allies, combatLog);
-                
-                // Appliquer les dégâts
-                if (attackResult.damage > 0) {
-                    target.hp = Math.max(0, target.hp - attackResult.damage);
-                    
-                    if (target.hp <= 0) {
-                        target.isAlive = false;
-                        combatLog.push(`   💀 ${target.name} has been defeated!`);
-                    } else if (target.hp <= target.maxHp * 0.3) {
-                        combatLog.push(`   🩸 ${target.name} is critically wounded! (${target.hp}/${target.maxHp} HP)`);
+
+            // Traiter les blessures/pertes si il y en a
+            if (result.casualties > 0) {
+                const casualtiesCount = Math.min(result.casualties, mission.team.length);
+                for (let i = 0; i < casualtiesCount; i++) {
+                    const monsterIndex = mission.team[i].originalIndex;
+                    const monster = this.game.player.monsters[monsterIndex];
+                    if (monster && monster.level > 1) {
+                        // Réduire le niveau du monstre blessé (système de blessure temporaire)
+                        const levelLoss = Math.max(1, Math.floor(monster.level * 0.1));
+                        monster.level = Math.max(1, monster.level - levelLoss);
+                        this.game.addToJournal(`🩹 ${monster.name} was injured and lost ${levelLoss} level(s)`);
                     }
                 }
-                
-                // Vérifier si le combat est terminé
-                if (enemies.filter(e => e.isAlive).length === 0) break;
             }
-            
-            turn++;
-        }
+
+            // Libérer les monstres de la mission
+            mission.team.forEach(monster => {
+                const originalMonster = this.game.player.monsters[monster.originalIndex];
+                if (originalMonster) {
+                    originalMonster.onMission = false;
+                    delete originalMonster.missionKey;
+                }
+            });
+        });
+
+        // Sauvegarder les missions complétées pour le récapitulatif
+        this.completedMissions.push(...this.activeMissions.map(mission => ({
+            ...mission,
+            completedAt: Date.now()
+        })));
+
+        // Vider la liste des missions actives
+        this.activeMissions = [];
+
+        return results;
+    }
+
+    // Simuler le résultat d'une mission (sans combat en temps réel)
+    simulateMissionOutcome(mission) {
+        const powerRatio = mission.teamPower / mission.requiredPower;
         
-        // Résultat final
-        const victory = enemyTeam.filter(unit => unit.isAlive).length === 0;
-        const playerCasualties = playerTeam.filter(unit => !unit.isAlive).length;
-        const enemyCasualties = enemyTeam.filter(unit => !unit.isAlive).length;
+        // Calcul du taux de succès basé sur la puissance de l'équipe
+        let baseSuccessChance = 0.3; // 30% de base
         
-        let outcome;
-        if (victory) {
-            if (playerCasualties === 0) {
-                outcome = 'crushing_victory';
-                combatLog.push(`🎊 <strong>FLAWLESS VICTORY!</strong> No casualties on your side!`);
-            } else if (playerCasualties <= playerTeam.length * 0.3) {
-                outcome = 'victory';
-                combatLog.push(`🎉 <strong>VICTORY!</strong> Light casualties sustained.`);
-            } else {
-                outcome = 'narrow_victory';
-                combatLog.push(`😤 <strong>Pyrrhic Victory</strong> - Heavy losses, but victory is yours.`);
-            }
+        if (powerRatio >= 2.0) {
+            baseSuccessChance = 0.95; // 95% si 2x plus fort
+        } else if (powerRatio >= 1.5) {
+            baseSuccessChance = 0.85; // 85% si 1.5x plus fort  
+        } else if (powerRatio >= 1.2) {
+            baseSuccessChance = 0.70; // 70% si 1.2x plus fort
+        } else if (powerRatio >= 1.0) {
+            baseSuccessChance = 0.55; // 55% si équivalent
+        } else if (powerRatio >= 0.8) {
+            baseSuccessChance = 0.40; // 40% si un peu plus faible
         } else {
-            if (playerCasualties >= playerTeam.length * 0.8) {
-                outcome = 'crushing_defeat';
-                combatLog.push(`💀 <strong>CRUSHING DEFEAT!</strong> Your forces are decimated!`);
-            } else {
-                outcome = 'narrow_defeat';
-                combatLog.push(`😔 <strong>Tactical Retreat</strong> - You must fall back to regroup.`);
-            }
+            baseSuccessChance = 0.25; // 25% si beaucoup plus faible
         }
-        
-        combatLog.push(`📊 <strong>Battle Summary:</strong>`);
-        combatLog.push(`   👹 Your casualties: ${playerCasualties}/${playerTeam.length}`);
-        combatLog.push(`   💀 Enemy casualties: ${enemyCasualties}/${enemyTeam.length}`);
-        
-        return {
-            victory: victory,
-            outcome: outcome,
-            combatLog: combatLog,
-            playerTeam: playerTeam,
-            enemyTeam: enemyTeam,
-            casualties: playerCasualties
+
+        // Facteur aléatoire pour la variabilité
+        const randomFactor = Math.random();
+        const success = randomFactor < baseSuccessChance;
+
+        const result = {
+            mission: mission,
+            success: success,
+            description: '',
+            rewards: { gold: 0, reputation: 0 },
+            casualties: 0,
+            experience: 0,
+            equipment: null,
+            powerRatio: powerRatio
         };
-    }
 
-    // Effectuer une attaque
-    performAttack(attacker, target, allies, combatLog) {
-        // Choisir une capacité (20% de chance d'utiliser une capacité spéciale)
-        let ability = null;
-        if (Math.random() < 0.2 && attacker.abilities.length > 0) {
-            const abilityName = attacker.abilities[Math.floor(Math.random() * attacker.abilities.length)];
-            ability = this.abilities.abilities[abilityName] || this.abilities.monster_abilities[abilityName];
-        }
-        
-        // Calculer les dégâts de base
-        let damage = Math.max(1, attacker.attack - Math.floor(target.defense / 2));
-        
-        // Ajouter variabilité (±20%)
-        damage = Math.floor(damage * (0.8 + Math.random() * 0.4));
-        
-        // Appliquer les effets de capacité
-        if (ability) {
-            damage = Math.floor(damage * ability.damage_multiplier);
-            combatLog.push(`   ✨ ${attacker.name} uses ${ability.name}!`);
+        if (success) {
+            // Calculer les récompenses selon la facilité de la victoire
+            let rewardMultiplier = 1.0;
+            let experienceGain = 3;
+            let casualtyChance = 0.1;
+
+            if (powerRatio >= 2.0) {
+                // Victoire écrasante
+                result.description = `Your overwhelming force crushes all resistance! The ${mission.name} is completed with minimal effort.`;
+                rewardMultiplier = 1.5;
+                experienceGain = 5;
+                casualtyChance = 0.0;
+            } else if (powerRatio >= 1.5) {
+                // Victoire dominante  
+                result.description = `Your forces dominate the battlefield! The ${mission.name} ends in decisive victory.`;
+                rewardMultiplier = 1.3;
+                experienceGain = 4;
+                casualtyChance = 0.05;
+            } else if (powerRatio >= 1.0) {
+                // Victoire standard
+                result.description = `After fierce fighting, your monsters achieve victory in the ${mission.name}. The battle was well-fought.`;
+                rewardMultiplier = 1.0;
+                experienceGain = 3;
+                casualtyChance = 0.15;
+            } else {
+                // Victoire difficile
+                result.description = `Despite being outmatched, your monsters pull off a surprising victory in the ${mission.name}!`;
+                rewardMultiplier = 0.8;
+                experienceGain = 2;
+                casualtyChance = 0.25;
+            }
+
+            // Appliquer les récompenses
+            result.rewards = {
+                gold: Math.floor(mission.reward.gold * rewardMultiplier),
+                reputation: Math.floor(mission.reward.reputation * rewardMultiplier)
+            };
+            result.experience = experienceGain;
+
+            // Calculer les pertes
+            result.casualties = Math.random() < casualtyChance ? Math.floor(mission.team.length * 0.2) : 0;
+
+            // Chance d'équipement selon la qualité de la victoire
+            if (mission.reward.items && mission.reward.items.length > 0) {
+                let equipmentChance = 0.2 * rewardMultiplier; // Base 20% modulé par la qualité
+                
+                if (Math.random() < equipmentChance) {
+                    const randomItem = mission.reward.items[Math.floor(Math.random() * mission.reward.items.length)];
+                    if (this.game.equipment && this.game.equipment[randomItem]) {
+                        result.equipment = randomItem;
+                    }
+                }
+            }
+
+        } else {
+            // Échec de la mission
+            if (powerRatio >= 0.8) {
+                result.description = `Your forces fought valiantly but were repelled during the ${mission.name}. A tactical retreat was necessary.`;
+            } else {
+                result.description = `Your forces were overwhelmed during the ${mission.name}. The enemy proved far stronger than expected.`;
+            }
             
-            // Effets spéciaux
-            this.applyAbilityEffects(ability, attacker, target, allies, combatLog);
+            // Récompenses réduites même en cas d'échec
+            result.rewards = {
+                gold: Math.floor(mission.reward.gold * 0.1), // 10% des récompenses
+                reputation: Math.floor(mission.reward.reputation * 0.05) // 5% de la réputation
+            };
+            result.experience = 1; // Un peu d'expérience quand même
+            result.casualties = Math.floor(mission.team.length * Math.max(0.2, 0.5 - powerRatio)); // Plus de pertes si très faible
         }
-        
-        // Message d'attaque
-        const attackMessages = [
-            `${attacker.name} attacks ${target.name}`,
-            `${attacker.name} strikes at ${target.name}`,
-            `${attacker.name} lunges at ${target.name}`,
-            `${attacker.name} assaults ${target.name}`
-        ];
-        
-        const message = attackMessages[Math.floor(Math.random() * attackMessages.length)];
-        combatLog.push(`   ⚔️ ${message} for ${damage} damage!`);
-        
-        return { damage: damage, ability: ability };
+
+        return result;
     }
 
-    // Appliquer les effets des capacités
-    applyAbilityEffects(ability, attacker, target, allies, combatLog) {
-        switch (ability.effect) {
-            case 'lifesteal':
-                const healing = Math.floor(ability.damage_multiplier * 10);
-                attacker.hp = Math.min(attacker.maxHp, attacker.hp + healing);
-                combatLog.push(`     💚 ${attacker.name} heals for ${healing} HP!`);
-                break;
-                
-            case 'critical':
-                combatLog.push(`     💥 Critical hit!`);
-                break;
-                
-            case 'stun':
-                combatLog.push(`     😵 ${target.name} is stunned!`);
-                break;
-                
-            case 'fear':
-                combatLog.push(`     😱 ${target.name} is terrified!`);
-                break;
-                
-            case 'buff_allies':
-                combatLog.push(`     📢 ${attacker.name} rallies the troops!`);
-                break;
-                
-            case 'armor_pierce':
-                combatLog.push(`     🗡️ Armor piercing attack!`);
-                break;
-        }
+    // Obtenir les monstres disponibles (pas en mission)
+    getAvailableMonsters() {
+        return this.game.player.monsters.filter(monster => !monster.onMission);
     }
+
+    // Obtenir le nombre de monstres disponibles
+    getAvailableMonstersCount() {
+        return this.getAvailableMonsters().length;
+    }
+
+    // Vérifier si un monstre spécifique est disponible
+    isMonsterAvailable(monsterIndex) {
+        const monster = this.game.player.monsters[monsterIndex];
+        return monster && !monster.onMission;
+    }
+
+    // Générer le récapitulatif de fin de journée
+    generateDayEndSummary(missionResults) {
+        if (missionResults.length === 0) {
+            return {
+                text: `
+                    <h2>🌙 End of Day Summary</h2>
+                    <p>No missions were completed today. Your monsters rest and prepare for tomorrow's challenges.</p>
+                `,
+                choices: [{
+                    text: "💤 Continue to Next Day",
+                    action: () => this.game.showScene('base')
+                }]
+            };
+        }
+
+        let totalGold = 0;
+        let totalReputation = 0;
+        let successfulMissions = 0;
+        let failedMissions = 0;
+
+        let summaryText = `<h2>🌙 End of Day Summary</h2>`;
+        summaryText += `<div class="day-summary">`;
+
+        missionResults.forEach(result => {
+            totalGold += result.rewards.gold;
+            totalReputation += result.rewards.reputation;
+            
+            if (result.success) {
+                successfulMissions++;
+                summaryText += `
+                    <div class="mission-result success" style="background: rgba(46, 125, 50, 0.2); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4>✅ ${result.mission.name} - SUCCESS</h4>
+                        <p>${result.description}</p>
+                        <p><strong>Rewards:</strong> 💰 ${result.rewards.gold} gold, ⭐ ${result.rewards.reputation} reputation</p>
+                        <p><strong>Team:</strong> ${result.mission.team.map(m => `${m.emoji} ${m.name}`).join(', ')}</p>
+                        ${result.equipment ? `<p><strong>🎁 Equipment Found:</strong> ${this.game.equipment[result.equipment].emoji} ${this.game.equipment[result.equipment].name}</p>` : ''}
+                        ${result.casualties > 0 ? `<p><strong>💔 Casualties:</strong> ${result.casualties} monster(s) injured</p>` : ''}
+                    </div>
+                `;
+            } else {
+                failedMissions++;
+                summaryText += `
+                    <div class="mission-result failure" style="background: rgba(183, 28, 28, 0.2); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #f44336;">
+                        <h4>❌ ${result.mission.name} - FAILED</h4>
+                        <p>${result.description}</p>
+                        <p><strong>Rewards:</strong> 💰 ${result.rewards.gold} gold, ⭐ ${result.rewards.reputation} reputation</p>
+                        <p><strong>Team:</strong> ${result.mission.team.map(m => `${m.emoji} ${m.name}`).join(', ')}</p>
+                        ${result.casualties > 0 ? `<p><strong>💔 Casualties:</strong> ${result.casualties} monster(s) injured</p>` : ''}
+                    </div>
+                `;
+            }
+        });
+
+        summaryText += `
+            <div class="day-totals" style="background: rgba(0,0,0,0.3); padding: 20px; margin: 20px 0; border-radius: 8px;">
+                <h3>📊 Daily Totals</h3>
+                <p><strong>Missions Completed:</strong> ${missionResults.length} (${successfulMissions} successful, ${failedMissions} failed)</p>
+                <p><strong>Total Gold Earned:</strong> 💰 ${totalGold}</p>
+                <p><strong>Total Reputation Gained:</strong> ⭐ ${totalReputation}</p>
+            </div>
+        `;
+
+        summaryText += `</div>`;
+
+        return {
+            text: summaryText,
+            choices: [{
+                text: "💤 Continue to Next Day",
+                action: () => {
+                    // Mettre à jour l'UI avec les nouvelles valeurs
+                    this.game.updateUI();
+                    this.game.showScene('base');
+                }
+            }]
+        };
+}
 }
