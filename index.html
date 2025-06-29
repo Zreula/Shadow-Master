@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadow Master - Text RPG</title>
     <link rel="stylesheet" href="style.css?v=202512262100">
+    
+    <!-- 
+    ====================================================================
+    SHADOW MASTER - PAGE PRINCIPALE
+    ====================================================================
+    
+    Cette page HTML constitue l'interface complète du jeu Shadow Master.
+    
+    STRUCTURE :
+    - Header : Titre du jeu
+    - Stats Panel : Statistiques du joueur (or, réputation, énergie, etc.)
+    - Game Content : Zone principale divisée en 3 parties :
+      * Story Section : Texte narratif et choix d'actions
+      * Side Panels : Monstres et inventaire
+    - Footer : Contrôles de sauvegarde
+    
+    SYSTÈMES INTÉGRÉS :
+    - Interface responsive (flexbox)
+    - Panneau de stats en temps réel
+    - Zone de jeu principale extensible
+    - Panneaux latéraux avec scroll
+    - Système de sauvegarde/chargement
+    
+    SCRIPTS CHARGÉS (dans l'ordre) :
+    1. dataManager.js - Gestionnaire des données JSON
+    2. ui.js - Interface utilisateur
+    3. utils.js - Fonctions utilitaires
+    4. actions.js - Actions du joueur
+    5. combat.js - Système de combat tactique
+    6. scenes.js - Gestionnaire des scènes
+    7. game.js - Classe principale du jeu
+    8. main.js - Point d'entrée et initialisation
+    
+    INTERACTIONS :
+    - Les boutons utilisent onclick avec window.game
+    - Les IDs correspondent aux éléments mis à jour par UI.js
+    - Le système de choix est généré dynamiquement
+    ====================================================================
+    -->
 </head>
 <body>
     <div class="game-container">

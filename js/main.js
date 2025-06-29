@@ -1,3 +1,34 @@
+/**
+ * ====================================================================
+ * SHADOW MASTER - POINT D'ENTRÉE PRINCIPAL
+ * ====================================================================
+ * 
+ * Ce fichier est le point d'entrée du jeu Shadow Master.
+ * Il initialise l'instance principale du jeu et gère les événements globaux.
+ * 
+ * RESPONSABILITÉS :
+ * - Création de l'instance Game principale
+ * - Initialisation asynchrone de tous les systèmes
+ * - Gestion des événements de sauvegarde/chargement
+ * - Exposition de l'objet game en global pour les interactions HTML
+ * - Gestion des erreurs d'initialisation
+ * 
+ * FLUX D'EXÉCUTION :
+ * 1. DOMContentLoaded → Création instance Game
+ * 2. game.init() → Chargement des données JSON
+ * 3. Attachement des event listeners pour les boutons
+ * 4. Affichage de la scène de démarrage
+ * 
+ * DÉPENDANCES :
+ * - Toutes les classes du système (Game, UI, Combat, etc.)
+ * - Fichiers JSON de configuration dans /data/
+ * 
+ * VARIABLES GLOBALES :
+ * - game : Instance principale accessible depuis HTML
+ * - window.game : Référence globale pour onclick handlers
+ * ====================================================================
+ */
+
 // Point d'entrée principal du jeu
 let game;
 
